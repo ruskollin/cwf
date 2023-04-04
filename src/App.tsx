@@ -1,22 +1,27 @@
-import { useState, useEffect } from "react";
-import { getAllStations } from "./services/stationService";
-import { Station } from "./types";
-import Stations from "./components/Stations";
+import * as React from "react";
+import { Link } from "react-router-dom";
+import Main from "./Main";
 
 import "./App.css";
 
 function App() {
-  const [stations, setStations] = useState<Station[]>([]);
-
-  useEffect(() => {
-    getAllStations().then((data) => {
-      setStations(data);
-    });
-  }, []);
-
   return (
     <div className="App">
-      <Stations stations={stations} />
+      <div>
+        <ul>
+          <li>
+            <Link to="/">Home Page</Link>
+          </li>
+          <li>
+            <Link to="/stations">Stations</Link>
+          </li>
+          <li>
+            <Link to="/may">May</Link>
+          </li>
+        </ul>
+        <hr />
+        <Main />
+      </div>
     </div>
   );
 }
