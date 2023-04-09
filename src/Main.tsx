@@ -20,7 +20,7 @@ const Main = () => {
   }, []);
 
   useEffect(() => {
-    getAllBikes().then((data) => {
+    getAllBikes(Math.floor(Math.random() * 11)).then((data) => {
       setBikes(data);
     });
   }, []);

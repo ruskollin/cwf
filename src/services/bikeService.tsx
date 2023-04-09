@@ -3,7 +3,9 @@ import { Bike } from "../types";
 
 const baseUrl = "http://localhost:3007/bikes";
 
-export const getAllBikes = async () => {
-  const response = await axios.get<Bike[]>(baseUrl);
+export const getAllBikes = async (pageNum: any) => {
+  const response = await axios.get<Bike[]>(baseUrl,{
+    params: {pageNum}
+  });
   return response.data;
 };
