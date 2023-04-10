@@ -1,25 +1,13 @@
-import * as React from "react";
-import { Link } from "react-router-dom";
 import Main from "./Main";
+import SideBar from "./components/Sidebar";
 
 import "./App.css";
 
 function App() {
   return (
-    <div className="App">
-      <div>
-        <ul>
-          <li>
-            <Link to="/">Home Page</Link>
-          </li>
-          <li>
-            <Link to="/stations">Stations</Link>
-          </li>
-          <li>
-            <Link to="/may">May</Link>
-          </li>
-        </ul>
-        <hr />
+    <div className="App" id="outer-container">
+      <SideBar pageWrapId={"page-wrap"} outerContainerId={"outer-container"} />
+      <div id="page-wrap">
         <Main />
       </div>
     </div>

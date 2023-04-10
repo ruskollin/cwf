@@ -12,7 +12,7 @@ export interface Station {
   Kapasiteet: string;
   x: number;
   y: number;
-  _id: string;
+  id: string;
 }
 
 export interface Bike {
@@ -24,5 +24,5 @@ export interface Bike {
   Return: string;
   Return_station_id: number;
   Return_station_name: string;
-  id: string
+  id: string;
 }

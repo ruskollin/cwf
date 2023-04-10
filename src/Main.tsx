@@ -10,26 +10,38 @@ import "./App.css";
 
 const Main = () => {
   const [stations, setStations] = useState<Station[]>([]);
-  const [bikes, setBikes] = useState<Bike[]>([]);
+  const [journeys, setJourneys] = useState<Bike[]>([]);
 
   useEffect(() => {
     getAllStations().then((data) => {
-      console.log('data for staion done' )
+      console.log("data for staion done", data);
       setStations(data);
     });
   }, []);
 
   useEffect(() => {
     getAllBikes(Math.floor(Math.random() * 11)).then((data) => {
-      setBikes(data);
+      setJourneys(data);
     });
   }, []);
+
+  const handleShowFilteredJourneys = (data: []) => {
+    setJourneys(data);
+  };
 
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/stations" element={<Stations stations={stations} />} />
-      <Route path="/may" element={<Bikes bikes={bikes} />} />
+      <Route
+        path="/journeys"
+        element={
+          <Bikes
+            bikes={journeys}
+            handleShowFilteredJourneys={handleShowFilteredJourneys}
+          />
+        }
+      />
     </Routes>
   );
 };
