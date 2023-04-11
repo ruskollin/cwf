@@ -1,13 +1,20 @@
 import * as React from "react";
-import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColDef,
+  GridRowsProp,
+  GridActionsCellItem,
+} from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button";
 import { Station } from "../types";
 
 interface Props {
   stations: Station[];
+  handleJourneys: (params: any, row: any) => any;
 }
 
-const Stations = ({ stations }: Props) => {
+const Stations = ({ stations, handleJourneys }: Props) => {
   const [page, setPage] = React.useState(0);
 
   const columns: GridColDef[] = [
@@ -46,11 +53,27 @@ const Stations = ({ stations }: Props) => {
       headerName: "Y",
       minWidth: 170,
     },
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 400,
+      renderCell: (row) => {
+        return (
+          <Button
+            onClick={(e) => handleJourneys(e, row.row)}
+            variant="contained"
+          >
+            Check me out
+          </Button>
+        );
+      },
+    },
   ];
 
   const rows = stations?.map((x) => ({
     id: x.id,
     FID: x.FID,
+    Nimi: x.Nimi,
     ID: x.ID,
     Name: x.Name,
     Osoite: x.Osoite,

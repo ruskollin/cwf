@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { getAllStations } from "./services/stationService";
-import { getAllBikes } from "./services/bikeService";
+import { getAllStations, handleCountJourneys } from "./services/stationService";
+import { getAllJourneys } from "./services/bikeService";
 import { Station, Bike } from "./types";
 import Stations from "./components/Stations";
 import Bikes from "./components/Bikes";
@@ -20,7 +20,7 @@ const Main = () => {
   }, []);
 
   useEffect(() => {
-    getAllBikes(Math.floor(Math.random() * 11)).then((data) => {
+    getAllJourneys(Math.floor(Math.random() * 11)).then((data) => {
       setJourneys(data);
     });
   }, []);
@@ -29,10 +29,21 @@ const Main = () => {
     setJourneys(data);
   };
 
+  const handleJourneys = async (event: React.SyntheticEvent, row: any) => {
+    event.preventDefault();
+    const resultsOfStationSearches = await handleCountJourneys(row.Nimi)
+    console.log('End: ', resultsOfStationSearches)
+  };
+
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/stations" element={<Stations stations={stations} />} />
+      <Route
+        path="/stations"
+        element={
+          <Stations stations={stations} handleJourneys={handleJourneys} />
+        }
+      />
       <Route
         path="/journeys"
         element={
