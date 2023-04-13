@@ -9,8 +9,9 @@ export const getAllStations = async () => {
 };
 
 export const handleCountJourneys = async (stationName: string) => {
-  const response = await axios.post<Station[]>(baseUrl, {
+  const response = await axios.post(baseUrl, {
     params: { stationName },
   });
+  console.log(response.data)
   return response.data;
 };

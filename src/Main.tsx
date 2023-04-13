@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getAllStations, handleCountJourneys } from "./services/stationService";
+import { getAllStations } from "./services/stationService";
 import { getAllJourneys } from "./services/bikeService";
 import { Station, Bike } from "./types";
 import Stations from "./components/Stations";
@@ -14,7 +14,6 @@ const Main = () => {
 
   useEffect(() => {
     getAllStations().then((data) => {
-      console.log("data for staion done", data);
       setStations(data);
     });
   }, []);
@@ -29,19 +28,13 @@ const Main = () => {
     setJourneys(data);
   };
 
-  const handleJourneys = async (event: React.SyntheticEvent, row: any) => {
-    event.preventDefault();
-    const resultsOfStationSearches = await handleCountJourneys(row.Nimi)
-    console.log('End: ', resultsOfStationSearches)
-  };
-
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route
         path="/stations"
         element={
-          <Stations stations={stations} handleJourneys={handleJourneys} />
+          <Stations stations={stations} />
         }
       />
       <Route

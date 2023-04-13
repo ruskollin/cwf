@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState, useEffect } from "react";
 import {
   DataGrid,
   GridColDef,
@@ -8,14 +8,29 @@ import {
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import { Station } from "../types";
+import { handleCountJourneys } from "../services/stationService";
+import Modal from "./Modal";
 
 interface Props {
   stations: Station[];
-  handleJourneys: (params: any, row: any) => any;
 }
 
-const Stations = ({ stations, handleJourneys }: Props) => {
-  const [page, setPage] = React.useState(0);
+const Stations = ({ stations }: Props) => {
+  const [page, setPage] = useState(0);
+  const [showStation, setShowStation] = useState(false);
+  const [returns, setReturns] = useState(0);
+  const [departures, setDepartures] = useState(0);
+  const [address, setAddress] = useState('');
+
+  const handleJourneys = async (event: React.SyntheticEvent, row: any) => {
+    event.preventDefault();
+    const resultsOfStationSearches = await handleCountJourneys(row.Nimi);
+    console.log(resultsOfStationSearches)
+    setReturns(resultsOfStationSearches.totalReturnsToStation);
+    setDepartures(resultsOfStationSearches.totalDeparturesFromStation);
+    setAddress(resultsOfStationSearches.stationName)
+    setShowStation(true);
+  };
 
   const columns: GridColDef[] = [
     {
@@ -89,6 +104,27 @@ const Stations = ({ stations, handleJourneys }: Props) => {
       <Paper sx={{ width: "100%", overflow: "hidden", height: 900 }}>
         <DataGrid rows={rows} columns={columns} />
       </Paper>
+
+      <Modal show={showStation}>
+        <div>
+          <p>Hi!</p>
+          <div>
+            <div>
+              <p>Returns: {returns}</p>
+              <p>Departures: {departures}</p>
+              <p>Address: {address}</p>
+              {/* <p>
+                    Total Departures from Station:{" "}
+                    {stationData.totalDeparturesFromStation}
+                  </p>
+                  <p>
+                    Total Returns To Station:{" "}
+                    {stationData.totalReturnsToStation}
+                  </p> */}
+            </div>
+          </div>
+        </div>
+      </Modal>
     </Paper>
   );
 };
