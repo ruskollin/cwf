@@ -7,28 +7,32 @@ import {
 } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Search from "./Search";
 import { Station } from "../types";
 import { handleCountJourneys } from "../services/stationService";
 import Modal from "./Modal";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 interface Props {
   stations: Station[];
 }
 
 const Stations = ({ stations }: Props) => {
-  const [page, setPage] = useState(0);
+  const [filterWord, setFilterWord] = useState("");
   const [showStation, setShowStation] = useState(false);
   const [returns, setReturns] = useState(0);
   const [departures, setDepartures] = useState(0);
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useState("");
+  const [stationToShow, setStationToShow] = useState("");
 
   const handleJourneys = async (event: React.SyntheticEvent, row: any) => {
     event.preventDefault();
     const resultsOfStationSearches = await handleCountJourneys(row.Nimi);
-    console.log(resultsOfStationSearches)
     setReturns(resultsOfStationSearches.totalReturnsToStation);
     setDepartures(resultsOfStationSearches.totalDeparturesFromStation);
-    setAddress(resultsOfStationSearches.stationName)
+    setAddress(resultsOfStationSearches.stationName[0].Osoite);
+    setStationToShow(resultsOfStationSearches.stationName[0].Name);
     setShowStation(true);
   };
 
@@ -71,12 +75,13 @@ const Stations = ({ stations }: Props) => {
     {
       field: "actions",
       headerName: "Actions",
-      width: 400,
+      minWidth: 200,
       renderCell: (row) => {
         return (
           <Button
             onClick={(e) => handleJourneys(e, row.row)}
             variant="contained"
+            style={{margin: 'auto'}}
           >
             Check me out
           </Button>
@@ -85,7 +90,7 @@ const Stations = ({ stations }: Props) => {
     },
   ];
 
-  const rows = stations?.map((x) => ({
+  const rows = stations?.map((x: any) => ({
     id: x.id,
     FID: x.FID,
     Nimi: x.Nimi,
@@ -101,26 +106,62 @@ const Stations = ({ stations }: Props) => {
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <Paper sx={{ width: "100%", overflow: "hidden", height: 900 }}>
-        <DataGrid rows={rows} columns={columns} />
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          width: "50%",
+          padding: 2,
+        }}
+      >
+      <Search filterWord={filterWord} setFilterWord={setFilterWord} />
+      </Box>
+      <Paper
+        sx={{
+          width: "100%",
+          overflow: "hidden",
+          height: 950,
+          margin: "auto",
+        }}
+      >
+        <DataGrid
+          rows={rows.filter((row) =>
+            Object.values(row)
+              .join(" ")
+              .toLowerCase()
+              .includes(filterWord.toLowerCase())
+          )}
+          columns={columns}
+        />
       </Paper>
 
       <Modal show={showStation}>
         <div>
-          <p>Hi!</p>
+          <Button
+            type="button"
+            onClick={(event) => setShowStation(false)}
+            style={{
+              position: "absolute",
+              marginLeft: 200,
+              marginTop: "-12px",
+            }}
+          >
+            <CancelIcon style={{ color: "#ff8383", fontSize: 50 }} />
+          </Button>
+          <h1
+            style={{
+              textTransform: "uppercase",
+              margin: "auto",
+              marginTop: 20,
+            }}
+          >
+            {stationToShow}
+          </h1>
+          <p>Address: {address}</p>
           <div>
             <div>
-              <p>Returns: {returns}</p>
-              <p>Departures: {departures}</p>
-              <p>Address: {address}</p>
-              {/* <p>
-                    Total Departures from Station:{" "}
-                    {stationData.totalDeparturesFromStation}
-                  </p>
-                  <p>
-                    Total Returns To Station:{" "}
-                    {stationData.totalReturnsToStation}
-                  </p> */}
+              <h2>Returns: {returns}</h2>
+              <h2>Departures: {departures}</h2>
             </div>
           </div>
         </div>

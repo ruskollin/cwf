@@ -4,6 +4,7 @@ import { getAllJourneys } from "./services/bikeService";
 import { Station, Bike } from "./types";
 import Stations from "./components/Stations";
 import Bikes from "./components/Bikes";
+import Map from "./components/Map"
 import HomePage from "./components/Homepage";
 import { Routes, Route } from "react-router-dom";
 import "./App.css";
@@ -24,10 +25,6 @@ const Main = () => {
     });
   }, []);
 
-  const handleShowFilteredJourneys = (data: []) => {
-    setJourneys(data);
-  };
-
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
@@ -42,10 +39,10 @@ const Main = () => {
         element={
           <Bikes
             bikes={journeys}
-            handleShowFilteredJourneys={handleShowFilteredJourneys}
           />
         }
       />
+      <Route path="/maps" element={<Map />} />
     </Routes>
   );
 };

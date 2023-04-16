@@ -3,7 +3,7 @@
 }
 
 #page-wrap {
-margin-top: 8%;
+margin-top: 2%;
 }
 
 /* Position and sizing of burger button */
@@ -13,6 +13,7 @@ margin-top: 8%;
   height: 30px;
   left: 36px;
   top: 36px;
+  margin-top: -15px
 }
 
 /* Color/shape of burger icon bars */

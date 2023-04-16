@@ -6,25 +6,26 @@
     border: 1px solid #ccc;
     box-shadow: 1px 1px 1px black;
     padding: 16px;
-    left: 15%;
     top: 75px;
+    left: 15%;
     box-sizing: border-box;
     transition: all 0.3s ease-out;
     display: block;
     overflow: auto;
+    background: url('../img/bike.png');
 }
 
-@media (min-width: 600px) {
+@media (max-width: 600px) {
     .Modal {
-        width: 500px;
-        left: calc(50% - 250px);
+        width: 75vw;
     }
 }
 
 @media (min-width: 1200px) {
     .Modal {
-        width: 50vw;
-        left: calc(50% - 25vw);
+        width: 540px;
+        left: calc(50% - 13vw);
+        height: 720px;
     }
 }
 

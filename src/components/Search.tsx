@@ -1,36 +1,33 @@
-import { useState } from "react";
-import axios from "axios";
-import { Bike } from "../types";
+import Box from "@mui/material/Box";
+import InputAdornment from "@mui/material/InputAdornment";
+import TextField from "@mui/material/TextField";
 
 interface Props {
-  handleShowFilteredJourneys: (params: any) => any;
+  filterWord: any;
+  setFilterWord: (params: any) => any;
 }
 
-const Search = ({ handleShowFilteredJourneys }: Props) => {
-  const [filterWord, setFilterWord] = useState("");
-
-  const baseUrl = "http://localhost:3007/journeys/search";
-
-  const getFilteredBikes = async (event: React.SyntheticEvent) => {
-    event.preventDefault();
-    const response = await axios.get<Bike[]>(baseUrl, {
-      params: { filterWord },
-    });
-    console.log(response.data);
-    handleShowFilteredJourneys(response.data);
-  };
+const Search = ({ filterWord, setFilterWord }: Props) => {
 
   return (
-    <form>
-      <input
-        type="text"
-        id="header-search"
-        name="search"
-        value={filterWord}
-        onChange={(event) => setFilterWord(event.target.value)}
-      />
-      <button onClick={(event) => getFilteredBikes(event)}>Search</button>
-    </form>
+   <Box>
+        <TextField
+          id="search"
+          label="Search"
+          variant="outlined"
+          size="small"
+          fullWidth
+          value={filterWord}
+          onChange={(event: any) => setFilterWord(event.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <p></p>
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Box>
   );
 };
 
