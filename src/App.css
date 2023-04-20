@@ -79,3 +79,35 @@ Note: Beware of modifying this element as it can break the animations - you shou
 .bm-overlay {
   background: rgba(0, 0, 0, 0.3);
 }
+
+button.focus{
+  outline: none
+}
+
+.moveAnimation {
+  transform: translateX(-50%);
+  position: relative;
+  left: 0;
+  animation: move 30s forwards;
+  animation-iteration-count: infinite;
+  overflow: hidden;
+}
+
+.moveAnimation.paused {
+  animation-play-state: paused;
+}
+
+.map-container {
+  height: inherit;
+  width: inherit;
+}
+
+
+@keyframes move {
+  0% {
+    left: 0;
+  }
+  100% {
+    left: calc(100vw + 50px);
+  }
+}

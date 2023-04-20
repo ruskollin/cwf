@@ -4,6 +4,7 @@ import {
   GridColDef,
   GridRowsProp,
   GridActionsCellItem,
+  gridColumnsTotalWidthSelector,
 } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
@@ -13,9 +14,19 @@ import { Station } from "../types";
 import { handleCountJourneys } from "../services/stationService";
 import Modal from "./Modal";
 import CancelIcon from "@mui/icons-material/Cancel";
+import Lottie from "lottie-react";
+import BikeAnimation from "../img/bike.json";
+import Map from "./Map"
+import "../App.css";
 
 interface Props {
   stations: Station[];
+}
+
+interface MarkerStation {
+  x: number,
+  y: number,
+  name: string
 }
 
 const Stations = ({ stations }: Props) => {
@@ -25,6 +36,9 @@ const Stations = ({ stations }: Props) => {
   const [departures, setDepartures] = useState(0);
   const [address, setAddress] = useState("");
   const [stationToShow, setStationToShow] = useState("");
+  const [isAnimationStopped, setIsAnimationStopped] = useState(false);
+  const [showMap, setShowMap] = useState(false);
+  const [selectedStation, setSelectedStation] = useState<MarkerStation>({x: 0, y: 9, name: ""});
 
   const handleJourneys = async (event: React.SyntheticEvent, row: any) => {
     event.preventDefault();
@@ -34,6 +48,13 @@ const Stations = ({ stations }: Props) => {
     setAddress(resultsOfStationSearches.stationName[0].Osoite);
     setStationToShow(resultsOfStationSearches.stationName[0].Name);
     setShowStation(true);
+  };
+
+  const handleShowMap = async (event: React.SyntheticEvent, row: any) => {
+    event.preventDefault();
+    console.log(row)
+    setSelectedStation({x: row.x, y: row.y, name: row.Nimi})
+    setShowMap(true);
   };
 
   const columns: GridColDef[] = [
@@ -78,13 +99,22 @@ const Stations = ({ stations }: Props) => {
       minWidth: 200,
       renderCell: (row) => {
         return (
-          <Button
-            onClick={(e) => handleJourneys(e, row.row)}
-            variant="contained"
-            style={{margin: 'auto'}}
-          >
-            Check me out
-          </Button>
+          <Box>
+            <Button
+              onClick={(e) => handleJourneys(e, row.row)}
+              variant="contained"
+              style={{ margin: "auto" }}
+            >
+              Check me out
+            </Button>
+            <Button
+              onClick={(e) => handleShowMap(e, row.row)}
+              variant="contained"
+              style={{ margin: "auto" }}
+            >
+              Map
+            </Button>
+          </Box>
         );
       },
     },
@@ -104,6 +134,17 @@ const Stations = ({ stations }: Props) => {
     y: x.y,
   }));
 
+  const stopAnimation = () => {
+    console.log(isAnimationStopped);
+    setIsAnimationStopped(!isAnimationStopped);
+    const animationDiv: any = document.querySelector(".moveAnimation");
+    if (isAnimationStopped) {
+      animationDiv.classList.remove("paused");
+    } else {
+      animationDiv.classList.add("paused");
+    }
+  };
+
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <Box
@@ -114,8 +155,22 @@ const Stations = ({ stations }: Props) => {
           padding: 2,
         }}
       >
-      <Search filterWord={filterWord} setFilterWord={setFilterWord} />
+        <Search filterWord={filterWord} setFilterWord={setFilterWord} />
       </Box>
+
+      <Box
+        sx={{ width: "100%", marginBottom: "-94px" }}
+        className="moveAnimation"
+      >
+        <Button type="button" onClick={stopAnimation}>
+          <Lottie
+            animationData={BikeAnimation}
+            loop={true}
+            style={{ width: 200 }}
+          />
+        </Button>
+      </Box>
+
       <Paper
         sx={{
           width: "100%",
@@ -166,6 +221,25 @@ const Stations = ({ stations }: Props) => {
           </div>
         </div>
       </Modal>
+
+      <Modal show={showMap}>
+        <div>
+          <Button
+            type="button"
+            onClick={(event) => setShowMap(false)}
+            style={{
+              position: "absolute",
+              marginLeft: 200,
+              marginTop: "-12px",
+              zIndex: 2
+            }}
+          >
+            <CancelIcon style={{ color: "#ff8383", fontSize: 50 }} />
+          </Button>
+          <Map selectedStation={selectedStation}/>
+        </div>
+      </Modal>
+
     </Paper>
   );
 };

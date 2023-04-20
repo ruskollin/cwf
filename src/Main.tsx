@@ -42,7 +42,7 @@ const Main = () => {
           />
         }
       />
-      <Route path="/maps" element={<Map />} />
+      {/* <Route path="/maps" element={<Map stations={stations}/>} /> */}
     </Routes>
   );
 };
