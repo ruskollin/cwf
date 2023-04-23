@@ -8,9 +8,9 @@ import {
 import "../App.css";
 
 interface MarkerStation {
-  x: number,
-  y: number,
-  name: string
+  x: number;
+  y: number;
+  name: string;
 }
 
 interface Props {
@@ -23,7 +23,7 @@ const Map = ({ selectedStation }: Props) => {
   });
 
   useEffect(() => {
-   console.log(selectedStation)
+    console.log(selectedStation);
   }, []);
 
   return (
@@ -36,9 +36,15 @@ const Map = ({ selectedStation }: Props) => {
           center={{ lat: 60.1699, lng: 24.9384 }}
           zoom={15}
         >
-            <MarkerF position={{lat: selectedStation.y, lng: selectedStation.x}}>
-              <InfoWindow position={{lat: selectedStation.x, lng: selectedStation.y}}><h2>{selectedStation.name}</h2></InfoWindow>
-              </MarkerF>
+          <MarkerF
+            position={{ lat: selectedStation.y, lng: selectedStation.x }}
+          >
+            <InfoWindow
+              position={{ lat: selectedStation.x, lng: selectedStation.y }}
+            >
+              <h2>{selectedStation.name}</h2>
+            </InfoWindow>
+          </MarkerF>
         </GoogleMap>
       )}
     </div>
@@ -64,7 +70,7 @@ export default Map;
 
 // const Map = ({ stations }: Props) => {
 //   const { isLoaded } = useLoadScript({
-//     googleMapsApiKey: "AIzaSyCFsMRnxg7iH9VZi7IzW98f4v8ifz7kXmA",
+//     googleMapsApiKey: "",
 //   });
 
 //   useEffect(() => {

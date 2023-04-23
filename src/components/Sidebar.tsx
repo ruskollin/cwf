@@ -37,9 +37,9 @@ const Sidebar = (props: any) => {
         <p className="menu-item">🚵‍♂️ JOURNEYS</p>
       </Link>
 
-      <Link to="/maps" onClick={event => closeSideBar("MAP")}>
+      {/* <Link to="/maps" onClick={event => closeSideBar("MAP")}>
         <p className="menu-item">🗺️ MAP</p>
-      </Link>
+      </Link> */}
     </Menu>
     </Box>
   );

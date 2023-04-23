@@ -31,7 +31,7 @@ const Main = () => {
       <Route
         path="/stations"
         element={
-          <Stations stations={stations} />
+          <Stations stations={stations} journeys={journeys}/>
         }
       />
       <Route

@@ -10,39 +10,53 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Search from "./Search";
-import { Station } from "../types";
+import { Station, Bike } from "../types";
 import { handleCountJourneys } from "../services/stationService";
 import Modal from "./Modal";
 import CancelIcon from "@mui/icons-material/Cancel";
 import Lottie from "lottie-react";
 import BikeAnimation from "../img/bike.json";
-import Map from "./Map"
+import Map from "./Map";
 import "../App.css";
 
 interface Props {
   stations: Station[];
+  journeys: Bike[];
 }
 
 interface MarkerStation {
-  x: number,
-  y: number,
-  name: string
+  x: number;
+  y: number;
+  name: string;
 }
 
-const Stations = ({ stations }: Props) => {
+const Stations = ({ stations, journeys }: Props) => {
   const [filterWord, setFilterWord] = useState("");
   const [showStation, setShowStation] = useState(false);
   const [returns, setReturns] = useState(0);
   const [departures, setDepartures] = useState(0);
+  const [averageDistanceStartingAtStation, setAverageDistanceStartingAtStation] = useState(0);
+  const [averageDistanceEndingAtStation, setAverageDistanceEndingAtStation] = useState(0);
   const [address, setAddress] = useState("");
   const [stationToShow, setStationToShow] = useState("");
   const [isAnimationStopped, setIsAnimationStopped] = useState(false);
   const [showMap, setShowMap] = useState(false);
-  const [selectedStation, setSelectedStation] = useState<MarkerStation>({x: 0, y: 9, name: ""});
+  const [selectedStation, setSelectedStation] = useState<MarkerStation>({
+    x: 0,
+    y: 9,
+    name: "",
+  });
 
   const handleJourneys = async (event: React.SyntheticEvent, row: any) => {
     event.preventDefault();
     const resultsOfStationSearches = await handleCountJourneys(row.Nimi);
+    const averageDistanceStart = await handleAverageDistanceFromStation(row.Nimi);
+    const averageDistanceEnd = await handleAverageDistanceEndingAtStation(row.Nimi);
+    handlePopularReturnStationsStartingFromStation(row.Nimi)
+    handlePopularDepartureStationsEndingAtStation(row.Nimi)
+    setAverageDistanceStartingAtStation(averageDistanceStart)
+    setAverageDistanceEndingAtStation(averageDistanceEnd)
+    handleAverageDistanceEndingAtStation(row.Nimi);
     setReturns(resultsOfStationSearches.totalReturnsToStation);
     setDepartures(resultsOfStationSearches.totalDeparturesFromStation);
     setAddress(resultsOfStationSearches.stationName[0].Osoite);
@@ -52,10 +66,88 @@ const Stations = ({ stations }: Props) => {
 
   const handleShowMap = async (event: React.SyntheticEvent, row: any) => {
     event.preventDefault();
-    console.log(row)
-    setSelectedStation({x: row.x, y: row.y, name: row.Nimi})
+    console.log(row);
+    setSelectedStation({ x: row.x, y: row.y, name: row.Nimi });
     setShowMap(true);
   };
+
+  async function handleAverageDistanceFromStation(stationName: string) {
+    console.log('Journeys length: ', journeys.length)
+    const stationJourneys = journeys.filter(
+      (journey) => journey.Departure_station_name === stationName
+    );
+    const totalDistance = stationJourneys.reduce(
+      (acc, journey) => acc + journey.Covered_distance,
+      0
+    );
+    const averageDistanceFromStation = totalDistance / stationJourneys.length;
+    console.log(
+      "departure station and distance ",
+      stationName,
+      stationJourneys.length,
+      totalDistance,
+      averageDistanceFromStation
+    );
+    return averageDistanceFromStation;
+  }
+
+  async function handleAverageDistanceEndingAtStation(stationName: string) {
+    console.log('Journeys length: ', journeys.length)
+    const stationJourneys = journeys.filter(
+      (journey) => journey.Return_station_name === stationName
+    );
+    const totalDistance = stationJourneys.reduce(
+      (acc, journey) => acc + journey.Covered_distance,
+      0
+    );
+    const averageDistanceEndingAtStation =
+      totalDistance / stationJourneys.length;
+    console.log(
+      "return station and distance ",
+      stationName,
+      stationJourneys.length,
+      totalDistance,
+      averageDistanceEndingAtStation
+    );
+    return averageDistanceEndingAtStation;
+  }
+
+  
+function handlePopularReturnStationsStartingFromStation(stationName: string) {
+  const filteredJourneys = journeys.filter(journey => journey.Departure_station_name === stationName); 
+
+  const counts = filteredJourneys.reduce((acc: any, journey) => {
+    const returnStation = journey.Return_station_name;
+    acc[returnStation] = (acc[returnStation] || 0) + 1; 
+    console.log(acc)
+    return acc;
+  }, {});
+  
+  const popularReturnStations = Object.entries(counts)
+    .sort(([, a], [, b]) => (b as number) - (a as number)) 
+    .slice(0, 5)
+    .map(([returnStation, count]) => ({ returnStation, count }));
+  
+  console.log('Popular Return Stations From: ', stationName, ': ', popularReturnStations);
+  }
+
+  function handlePopularDepartureStationsEndingAtStation(stationName: string) {
+    const filteredJourneys = journeys.filter(journey => journey.Return_station_name === stationName); 
+
+    const counts = filteredJourneys.reduce((acc: any, journey) => {
+      const departureStation = journey.Departure_station_name;
+      acc[departureStation] = (acc[departureStation] || 0) + 1; 
+      console.log(acc)
+      return acc;
+    }, {});
+    
+    const popularDepartureStations = Object.entries(counts)
+      .sort(([, a], [, b]) => (b as number) - (a as number)) 
+      .slice(0, 5)
+      .map(([departureStation, count]) => ({ departureStation, count }));
+    
+    console.log('Popular Departure Stations To: ', stationName, ': ', popularDepartureStations);
+  }
 
   const columns: GridColDef[] = [
     {
@@ -217,6 +309,8 @@ const Stations = ({ stations }: Props) => {
             <div>
               <h2>Returns: {returns}</h2>
               <h2>Departures: {departures}</h2>
+              <h2>Average Distance From Station: {averageDistanceStartingAtStation.toFixed(2)} kms.</h2>
+              <h2>Average Distance Ending at Station: {averageDistanceEndingAtStation.toFixed(2)} kms.</h2>
             </div>
           </div>
         </div>
@@ -231,15 +325,14 @@ const Stations = ({ stations }: Props) => {
               position: "absolute",
               marginLeft: 200,
               marginTop: "-12px",
-              zIndex: 2
+              zIndex: 2,
             }}
           >
             <CancelIcon style={{ color: "#ff8383", fontSize: 50 }} />
           </Button>
-          <Map selectedStation={selectedStation}/>
+          <Map selectedStation={selectedStation} />
         </div>
       </Modal>
-
     </Paper>
   );
 };
