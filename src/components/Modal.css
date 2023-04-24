@@ -12,7 +12,6 @@
     transition: all 0.3s ease-out;
     display: block;
     overflow: auto;
-    background: url('../img/bike.png');
 }
 
 @media (max-width: 600px) {
@@ -25,7 +24,7 @@
     .Modal {
         width: 540px;
         left: calc(50% - 13vw);
-        height: 720px;
+        height: 600px;
     }
 }
 

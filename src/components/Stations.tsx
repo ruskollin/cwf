@@ -35,28 +35,54 @@ const Stations = ({ stations, journeys }: Props) => {
   const [showStation, setShowStation] = useState(false);
   const [returns, setReturns] = useState(0);
   const [departures, setDepartures] = useState(0);
-  const [averageDistanceStartingAtStation, setAverageDistanceStartingAtStation] = useState(0);
-  const [averageDistanceEndingAtStation, setAverageDistanceEndingAtStation] = useState(0);
+  const [
+    averageDistanceStartingAtStation,
+    setAverageDistanceStartingAtStation,
+  ] = useState(0);
+  const [averageDistanceEndingAtStation, setAverageDistanceEndingAtStation] =
+    useState(0);
   const [address, setAddress] = useState("");
   const [stationToShow, setStationToShow] = useState("");
   const [isAnimationStopped, setIsAnimationStopped] = useState(false);
   const [showMap, setShowMap] = useState(false);
+  const [popularDepartureStations, setPopularDepartureStations] = useState([]);
+  const [popularReturnStations, setPopularReturnStations] = useState([]);
+  const [chosenMonth, setChosenMonth] = useState(0);
+  const [chosenStation, setChosenStation] = useState("");
   const [selectedStation, setSelectedStation] = useState<MarkerStation>({
     x: 0,
     y: 9,
     name: "",
   });
 
+  const monthsList = [
+    "All",
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
   const handleJourneys = async (event: React.SyntheticEvent, row: any) => {
     event.preventDefault();
     const resultsOfStationSearches = await handleCountJourneys(row.Nimi);
-    const averageDistanceStart = await handleAverageDistanceFromStation(row.Nimi);
-    const averageDistanceEnd = await handleAverageDistanceEndingAtStation(row.Nimi);
-    handlePopularReturnStationsStartingFromStation(row.Nimi)
-    handlePopularDepartureStationsEndingAtStation(row.Nimi)
-    setAverageDistanceStartingAtStation(averageDistanceStart)
-    setAverageDistanceEndingAtStation(averageDistanceEnd)
-    handleAverageDistanceEndingAtStation(row.Nimi);
+    const averageDistanceStart = await handleAverageDistanceFromStation(
+      row.Nimi,
+      chosenMonth
+    );
+    handleAverageDistanceEndingAtStation(row.Nimi, chosenMonth);
+    handlePopularReturnStationsStartingFromStation(row.Nimi, chosenMonth);
+    handlePopularDepartureStationsEndingAtStation(row.Nimi, chosenMonth);
+    setAverageDistanceStartingAtStation(averageDistanceStart);
+
     setReturns(resultsOfStationSearches.totalReturnsToStation);
     setDepartures(resultsOfStationSearches.totalDeparturesFromStation);
     setAddress(resultsOfStationSearches.stationName[0].Osoite);
@@ -71,8 +97,11 @@ const Stations = ({ stations, journeys }: Props) => {
     setShowMap(true);
   };
 
-  async function handleAverageDistanceFromStation(stationName: string) {
-    console.log('Journeys length: ', journeys.length)
+  async function handleAverageDistanceFromStation(
+    stationName: string,
+    chosenMonth: number
+  ) {
+    console.log("Journeys length: ", journeys.length);
     const stationJourneys = journeys.filter(
       (journey) => journey.Departure_station_name === stationName
     );
@@ -91,62 +120,112 @@ const Stations = ({ stations, journeys }: Props) => {
     return averageDistanceFromStation;
   }
 
-  async function handleAverageDistanceEndingAtStation(stationName: string) {
-    console.log('Journeys length: ', journeys.length)
-    const stationJourneys = journeys.filter(
+  async function handleAverageDistanceEndingAtStation(
+    stationName: string,
+    chosenMonth: number
+  ) {
+    console.log("Journeys length: ", journeys.length);
+    const stationJourneysList = journeys.filter(
       (journey) => journey.Return_station_name === stationName
     );
-    const totalDistance = stationJourneys.reduce(
+    const totalDistance = stationJourneysList.reduce(
       (acc, journey) => acc + journey.Covered_distance,
       0
     );
     const averageDistanceEndingAtStation =
-      totalDistance / stationJourneys.length;
-    console.log(
-      "return station and distance ",
-      stationName,
-      stationJourneys.length,
-      totalDistance,
-      averageDistanceEndingAtStation
+      totalDistance / stationJourneysList.length;
+    setAverageDistanceEndingAtStation(averageDistanceEndingAtStation);
+  }
+
+  function handlePopularReturnStationsStartingFromStation(
+    stationName: string,
+    chosenMonth: number
+  ) {
+    console.log("searching popular stations for: ", stationName);
+    const filteredJourneys = journeys.filter(
+      (journey) => journey.Departure_station_name === stationName
     );
-    return averageDistanceEndingAtStation;
+
+    const counts = filteredJourneys.reduce((acc: any, journey) => {
+      const returnStation = journey.Return_station_name;
+      acc[returnStation] = (acc[returnStation] || 0) + 1;
+      console.log(acc);
+      return acc;
+    }, {});
+
+    const popularReturnStationsList: any = Object.entries(counts)
+      .sort(([, a], [, b]) => (b as number) - (a as number))
+      .slice(0, 5)
+      .map(([returnStation, count]) => ({ returnStation, count }));
+
+    setPopularReturnStations(popularReturnStationsList);
   }
 
-  
-function handlePopularReturnStationsStartingFromStation(stationName: string) {
-  const filteredJourneys = journeys.filter(journey => journey.Departure_station_name === stationName); 
-
-  const counts = filteredJourneys.reduce((acc: any, journey) => {
-    const returnStation = journey.Return_station_name;
-    acc[returnStation] = (acc[returnStation] || 0) + 1; 
-    console.log(acc)
-    return acc;
-  }, {});
-  
-  const popularReturnStations = Object.entries(counts)
-    .sort(([, a], [, b]) => (b as number) - (a as number)) 
-    .slice(0, 5)
-    .map(([returnStation, count]) => ({ returnStation, count }));
-  
-  console.log('Popular Return Stations From: ', stationName, ': ', popularReturnStations);
-  }
-
-  function handlePopularDepartureStationsEndingAtStation(stationName: string) {
-    const filteredJourneys = journeys.filter(journey => journey.Return_station_name === stationName); 
+  function handlePopularDepartureStationsEndingAtStation(
+    stationName: string,
+    chosenMonth: number
+  ) {
+    console.log("searching popular stations for: ", stationName);
+    const filteredJourneys = journeys.filter(
+      (journey) => journey.Return_station_name === stationName
+    );
 
     const counts = filteredJourneys.reduce((acc: any, journey) => {
       const departureStation = journey.Departure_station_name;
-      acc[departureStation] = (acc[departureStation] || 0) + 1; 
-      console.log(acc)
+      acc[departureStation] = (acc[departureStation] || 0) + 1;
+      console.log(acc);
       return acc;
     }, {});
-    
-    const popularDepartureStations = Object.entries(counts)
-      .sort(([, a], [, b]) => (b as number) - (a as number)) 
+
+    const popularDepartureStationsList: any = Object.entries(counts)
+      .sort(([, a], [, b]) => (b as number) - (a as number))
       .slice(0, 5)
       .map(([departureStation, count]) => ({ departureStation, count }));
+
+    setPopularDepartureStations(popularDepartureStationsList);
+  }
+
+  function handleChosenMonth(month: string) {
+    const monthIndex = monthsList.indexOf(month);
+    console.log(monthIndex);
+    setChosenMonth(monthIndex);
+
+    // const stationJourneysList = journeys.filter((journey) => {
+    //   const departureMonth = new Date(journey.Departure).getMonth() + 1;
+    //   console.log(new Date(journey.Departure).getMonth() + 1)
+    //   return departureMonth === 5;
+    // });
     
-    console.log('Popular Departure Stations To: ', stationName, ': ', popularDepartureStations);
+    //working
+    const stationJourneysList = journeys.filter((journey) => {
+      const departureDate = new Date(journey.Departure);
+      console.log(departureDate, month)
+      return departureDate.toLocaleString('default', { month: 'long' }) === month;
+    });
+
+
+    console.log(stationJourneysList)
+
+    // const stationJourneysList = journeys.filter(
+    //   (journey) => new Date(journey.Departure).getMonth() === monthIndex
+    // );
+
+    // const stationJourneysList = journeys.filter((journey) => {
+    //   const departureMonth = new Date(journey.Departure).getMonth();
+    //   console.log(departureMonth, monthIndex, 'Haukilahdenkatu', 'Lintulahdenkatu');
+    //   return (
+    //     journey.Return_station_name === 'Lintulahdenkatu' && departureMonth === monthIndex
+    //   );
+    // });
+
+    // const totalDistance = stationJourneysList.reduce(
+    //   (acc, journey) => acc + journey.Covered_distance,
+    //   0
+    // );
+    // const averageDistanceEndingAtStation =
+    //   totalDistance / stationJourneysList.length;
+    // console.log(averageDistanceEndingAtStation);
+    // setAverageDistanceEndingAtStation(averageDistanceEndingAtStation);
   }
 
   const columns: GridColDef[] = [
@@ -305,12 +384,50 @@ function handlePopularReturnStationsStartingFromStation(stationName: string) {
             {stationToShow}
           </h1>
           <p>Address: {address}</p>
+
+          <div>
+            {monthsList.map((month) => (
+              <button key={month} onClick={() => handleChosenMonth(month)}>
+                {month}
+              </button>
+            ))}
+          </div>
+
           <div>
             <div>
-              <h2>Returns: {returns}</h2>
-              <h2>Departures: {departures}</h2>
-              <h2>Average Distance From Station: {averageDistanceStartingAtStation.toFixed(2)} kms.</h2>
-              <h2>Average Distance Ending at Station: {averageDistanceEndingAtStation.toFixed(2)} kms.</h2>
+              <h3>Returns: {returns}</h3>
+              <h3>Departures: {departures}</h3>
+              <h3>
+                Average Distance From Station:{" "}
+                {averageDistanceStartingAtStation.toFixed(2)} kms.
+              </h3>
+              <h3>
+                Average Distance Ending at Station:{" "}
+                {averageDistanceEndingAtStation.toFixed(2)} kms.
+              </h3>
+              {popularReturnStations.length > 0 && (
+                <div>
+                  <h3>Popular Return Stations From this Station:</h3>
+                  {popularReturnStations
+                    .map(
+                      (station: { returnStation: string }) =>
+                        station.returnStation
+                    )
+                    .join(", ")}
+                </div>
+              )}
+
+              {popularDepartureStations.length > 0 && (
+                <div>
+                  <h3>Popular Departure Stations To this Station:</h3>
+                  {popularDepartureStations
+                    .map(
+                      (station: { departureStation: string }) =>
+                        station.departureStation
+                    )
+                    .join(", ")}
+                </div>
+              )}
             </div>
           </div>
         </div>
