@@ -8,10 +8,9 @@ export const getAllStations = async () => {
   return response.data;
 };
 
-export const handleCountJourneys = async (stationName: string) => {
+export const handleStationCalculations = async (stationName: string, month: string) => {
   const response = await axios.post(baseUrl, {
-    params: { stationName },
+    params: { stationName, month },
   });
-  console.log(response.data)
   return response.data;
 };

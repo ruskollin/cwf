@@ -4,6 +4,7 @@
 
 #page-wrap {
 margin-top: 2%;
+overflow: hidden;
 }
 
 /* Position and sizing of burger button */
