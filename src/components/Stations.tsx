@@ -9,6 +9,7 @@ import { handleStationCalculations } from "../services/stationService";
 import Modal from "./Modal";
 import CancelIcon from "@mui/icons-material/Cancel";
 import Map from "./Map";
+import AddStation from "./AddStation";
 import "../App.css";
 
 interface Props {
@@ -193,6 +194,7 @@ const Stations = ({ stations, journeys }: Props) => {
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
+      <AddStation />
       <Box
         sx={{
           display: "flex",
