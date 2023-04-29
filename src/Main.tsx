@@ -15,12 +15,14 @@ const Main = () => {
 
   useEffect(() => {
     getAllStations().then((data) => {
+      console.log(data[0])
       setStations(data);
     });
   }, []);
 
   useEffect(() => {
     getAllJourneys(Math.floor(Math.random() * 11)).then((data) => {
+      console.log(data[0])
       setJourneys(data);
     });
   }, []);
@@ -31,15 +33,13 @@ const Main = () => {
       <Route
         path="/stations"
         element={
-          <Stations stations={stations} journeys={journeys}/>
+          <Stations stations={stations}/>
         }
       />
       <Route
         path="/journeys"
         element={
-          <Bikes
-            bikes={journeys}
-          />
+          <Bikes stations={stations} journeys={journeys}/>
         }
       />
       {/* <Route path="/maps" element={<Map stations={stations}/>} /> */}

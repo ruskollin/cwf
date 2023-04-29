@@ -1,19 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import Paper from "@mui/material/Paper";
 import { Bike } from "../types";
 import Box from "@mui/material/Box";
-import InputAdornment from "@mui/material/InputAdornment";
-import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
-import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
+import { Station } from "../types";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import Search from "./Search";
-import { stringify } from "querystring";
+import AddJourney from "./AddJourney";
+import { Pagination } from '@mui/material';
 
 interface Props {
-  bikes: Bike[];
+  stations: Station[];
+  journeys: Bike[];
 }
 
-const Bikes = ({ bikes }: Props) => {
+const Bikes = ({ journeys, stations }: Props) => {
   const [filterWord, setFilterWord] = useState("");
   const [filterWordDistance, setFilterWordDistance] = useState(0);
   const [filterWordDuration, setFilterWordDuration] = useState(0);
@@ -36,6 +36,8 @@ const Bikes = ({ bikes }: Props) => {
       label: "Duration",
     },
   ];
+
+  const [page, setPage] = useState(0);
 
   const columns: GridColDef[] = [
     {
@@ -62,13 +64,17 @@ const Bikes = ({ bikes }: Props) => {
     },
   ];
 
-  const rows = bikes?.map((x) => ({
+  const rows = journeys?.map((x) => ({
     id: x.id,
     Departure_station_name: x.Departure_station_name,
     Return_station_name: x.Return_station_name,
     Covered_distance: x.Covered_distance,
     Duration: x.Duration,
   }));
+
+  const handlePageChange = (params: any) => {
+    setPage(params.page);
+  };
 
   // useEffect(() => {
   //   console.log(isNumber(filterWord))
@@ -84,6 +90,7 @@ const Bikes = ({ bikes }: Props) => {
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden", height: 900 }}>
+      <AddJourney stations={stations}/>
       <Box
         sx={{
           display: "flex",
@@ -95,13 +102,14 @@ const Bikes = ({ bikes }: Props) => {
         <Search filterWord={filterWord} setFilterWord={setFilterWord} />
       </Box>
       <DataGrid
-        rows={rows.filter((row) => {
+        rows={rows.filter((row: any) => {
           return Object.values(row)
             .join(" ")
             .toLowerCase()
             .includes(filterWord.toLowerCase());
         })}
         columns={columns}
+        pagination
       />
     </Paper>
   );

@@ -4,7 +4,7 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Search from "./Search";
-import { Station, Bike } from "../types";
+import { Station } from "../types";
 import { handleStationCalculations } from "../services/stationService";
 import Modal from "./Modal";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -14,7 +14,6 @@ import "../App.css";
 
 interface Props {
   stations: Station[];
-  journeys: Bike[];
 }
 
 interface MarkerStation {
@@ -23,7 +22,7 @@ interface MarkerStation {
   name: string;
 }
 
-const Stations = ({ stations, journeys }: Props) => {
+const Stations = ({ stations }: Props) => {
   const [filterWord, setFilterWord] = useState("");
   const [showStation, setShowStation] = useState(false);
   const [returns, setReturns] = useState(0);
@@ -117,6 +116,23 @@ const Stations = ({ stations, journeys }: Props) => {
 
   const columns: GridColDef[] = [
     {
+      field: "FID",
+      headerName: "FID",
+      renderCell: () => (
+        <div style={{ display: "none" }} />
+      ),
+      renderHeader: () => {
+        return (
+            <span style={{ display: "none" }} />
+        );
+      },
+      sortable: false, 
+      filterable: false,
+      disableColumnMenu: true,
+      width: 0,
+      minWidth: 0
+    },
+    {
       field: "Name",
       headerName: "Name",
       minWidth: 170,
@@ -203,7 +219,7 @@ const Stations = ({ stations, journeys }: Props) => {
           padding: 2,
         }}
       >
-        <Search filterWord={filterWord} setFilterWord={setFilterWord} />
+      <Search filterWord={filterWord} setFilterWord={setFilterWord} />
       </Box>
       <Paper
         sx={{
@@ -221,6 +237,11 @@ const Stations = ({ stations, journeys }: Props) => {
               .includes(filterWord.toLowerCase())
           )}
           columns={columns}
+          initialState={{
+            sorting: {
+              sortModel: [{ field: 'FID', sort: 'desc' }],
+            },
+          }}
         />
       </Paper>
 

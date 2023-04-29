@@ -20,6 +20,6 @@ export const handleStationCalculations = async (
 
 // export const handleAddNewStation= async ( nameStation: string, address: string, city: string, operator: string, capacity: number, xMap: number, yMap: number) => {
 export const handleAddNewStation = async (newStation: any) => {
-const response = await axios.post(`${baseUrl}/addNew`, newStation);
+  const response = await axios.post(`${baseUrl}/addNew`, newStation);
   return response.data;
 };

@@ -1,64 +1,58 @@
 import React, { useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TextField,
-  Button,
-} from "@mui/material";
+import { TableCell, TableRow, TextField, Button } from "@mui/material";
 import Box from "@mui/material/Box";
+import MenuItem from "@mui/material/MenuItem";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { handleAddNewStation } from "../services/stationService";
+import { handleAddNewJourney } from "../services/bikeService";
 import Modal from "./Modal";
+import { Station } from "../types";
 import { Player } from "@lottiefiles/react-lottie-player";
 import heartAnimation from "../lotties/heart.json";
 import brainAnimation from "../lotties/thinking.json";
+import DateTimePicker from "./DateTimePicker";
 
-const AddStation = () => {
-  const [nameStation, setNameStation] = useState("");
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [operator, setOperator] = useState("");
-  const [capacity, setCapacity] = useState(0);
-  const [xMap, setXMap] = useState(0.0);
-  const [yMap, setYMap] = useState(0.0);
+interface Props {
+  stations: Station[];
+}
+
+const AddJourney = ({ stations }: Props) => {
+  const [departureStation, setDepartureStation] = useState("");
+  const [returnStation, setReturnStation] = useState("");
+  const [coveredDistance, setCoveredDistance] = useState("");
+  const [duration, setDuration] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
   const [showMissingField, setShowMissingField] = useState(false);
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const handleAddStation = () => {
+  const handleAddJourney = () => {
     if (
-      !nameStation ||
-      !address ||
-      !city ||
-      !operator ||
-      !capacity ||
-      !xMap ||
-      !yMap
+      !departureStation ||
+      !returnStation ||
+      !coveredDistance ||
+      !duration ||
+      !startTime ||
+      !endTime
     ) {
       setShowMissingField(true);
     } else {
-      handleAddNewStation({
-        nameStation,
-        address,
-        city,
-        operator,
-        capacity,
-        xMap,
-        yMap,
+      handleAddNewJourney({
+        Departure_station_name: departureStation,
+        Return_station_name: returnStation,
+        Covered_distance: coveredDistance,
+        Departure: startTime,
+        Return: endTime,
+        Duration: duration,
       }).then((response) => {
         if (response.success === true) {
           setShowSuccess(true);
-          setNameStation("");
-          setAddress("");
-          setCity("");
-          setOperator("");
-          setCapacity(0);
-          setXMap(0.0);
-          setYMap(0.0);
+          setDepartureStation("");
+          setReturnStation("");
+          setCoveredDistance("");
+          setDuration("");
+          setStartTime("");
+          setEndTime("");
           setShowMissingField(false);
         } else {
           setShowError(true);
@@ -73,61 +67,63 @@ const AddStation = () => {
       <TableRow>
         <TableCell>
           <TextField
-            label="Station Name"
-            value={nameStation}
-            onChange={(e) => setNameStation(e.target.value)}
+            select
+            label="Departure Station"
+            value={departureStation}
+            onChange={(e) => setDepartureStation(e.target.value)}
+            style={{ width: 200 }}
+          >
+            {stations.map((station) => (
+              <MenuItem key={station.Nimi} value={station.Nimi}>
+                {station.Nimi}
+              </MenuItem>
+            ))}
+          </TextField>
+        </TableCell>
+        <TableCell>
+          <TextField
+            select
+            label="Return Station"
+            value={returnStation}
+            onChange={(e) => setReturnStation(e.target.value)}
+            style={{ width: 200 }}
+          >
+            {stations.map((station) => (
+              <MenuItem key={station.Nimi} value={station.Nimi}>
+                {station.Nimi}
+              </MenuItem>
+            ))}
+          </TextField>
+        </TableCell>
+        <TableCell>
+          <TextField
+            label="Covered Distance"
+            value={coveredDistance}
+            onChange={(e) => setCoveredDistance(e.target.value)}
           />
         </TableCell>
         <TableCell>
           <TextField
-            label="Address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
+            label="Duration"
+            value={duration}
+            onChange={(e) => setDuration(e.target.value)}
           />
         </TableCell>
         <TableCell>
-          <TextField
-            label="City"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
+          <DateTimePicker
+            time={startTime}
+            label={"Start"}
+            setTime={setStartTime}
           />
         </TableCell>
         <TableCell>
-          <TextField
-            label="Operator"
-            value={operator}
-            onChange={(e) => setOperator(e.target.value)}
-          />
-        </TableCell>
-        <TableCell>
-          <TextField
-            label="Capacity"
-            type="number"
-            value={capacity}
-            onChange={(e) => setCapacity(Number(e.target.value))}
-          />
-        </TableCell>
-        <TableCell>
-          <TextField
-            label="X"
-            type="number"
-            value={xMap}
-            onChange={(e) => setXMap(Number(e.target.value))}
-          />
-        </TableCell>
-        <TableCell>
-          <TextField
-            label="Y"
-            type="number"
-            value={yMap}
-            onChange={(e) => setYMap(Number(e.target.value))}
-          />
+          <DateTimePicker time={endTime} label={"End"} setTime={setEndTime} />
         </TableCell>
         <TableCell>
           <Button
             variant="contained"
             color="primary"
-            onClick={handleAddStation}
+            onClick={handleAddJourney}
           >
             Add
           </Button>
@@ -148,8 +144,8 @@ const AddStation = () => {
           >
             <CancelIcon style={{ color: "#ff8383", fontSize: 50 }} />
           </Button>
-          <h3>Good job! Successfully added the station!</h3>
-          <Player src={heartAnimation} loop autoplay/>
+          <h3>Good job! Successfully added a great journey!</h3>
+          <Player src={heartAnimation} loop autoplay />
         </div>
       </Modal>
 
@@ -190,11 +186,17 @@ const AddStation = () => {
             <CancelIcon style={{ color: "#ff8383", fontSize: 50 }} />
           </Button>
           <h3>Please check that all fields are complete.</h3>
-          <Player src={brainAnimation}  className="player" loop autoplay style={{marginTop: 100}}/>
+          <Player
+            src={brainAnimation}
+            className="player"
+            loop
+            autoplay
+            style={{ marginTop: 100 }}
+          />
         </div>
       </Modal>
     </Box>
   );
 };
 
-export default AddStation;
+export default AddJourney;

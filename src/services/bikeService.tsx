@@ -9,3 +9,8 @@ export const getAllJourneys = async (pageNum: any) => {
   });
   return response.data;
 };
+
+export const handleAddNewJourney= async (newJourney: any) => {
+  const response = await axios.post(`${baseUrl}/addNew`, newJourney);
+  return response.data;
+};
