@@ -5,9 +5,9 @@ import "./App.css";
 
 function App() {
   return (
-    <div className="App" id="outer-container">
-      <SideBar pageWrapId={"page-wrap"} outerContainerId={"outer-container"}/>
-      <div id="page-wrap">
+    <div className="App">
+      <SideBar />
+      <div style={{height: "90vh", marginTop: 60, overflow: "hidden"}}>
         <Main />
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { bubble as Menu } from "react-burger-menu";
+import { bubble as MyMenu } from "react-burger-menu";
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 
@@ -17,9 +17,10 @@ const Sidebar = (props: any) => {
   };
 
   return (
-    <Box style={{width: 300}}>
-      <h3 style={{marginTop: "22px"}}>{title}</h3>
-    <Menu
+    <Box className="menuBar">
+      <div style={{backgroundColor: "red", width: "100%"}}><h3 style={{marginTop: "22px", position: "fixed", top: 0, left: 100}}>{title}</h3></div>
+      
+    <MyMenu
       {...props}
       isOpen={isOpen}
       onOpen={handleIsOpen}
@@ -40,7 +41,7 @@ const Sidebar = (props: any) => {
       {/* <Link to="/maps" onClick={event => closeSideBar("MAP")}>
         <p className="menu-item">🗺️ MAP</p>
       </Link> */}
-    </Menu>
+    </MyMenu>
     </Box>
   );
 };

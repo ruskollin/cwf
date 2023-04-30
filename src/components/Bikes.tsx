@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useState } from "react";
 import Paper from "@mui/material/Paper";
 import { Bike } from "../types";
 import Box from "@mui/material/Box";
@@ -6,7 +6,7 @@ import { Station } from "../types";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import Search from "./Search";
 import AddJourney from "./AddJourney";
-import { Pagination } from '@mui/material';
+import { Pagination } from "@mui/material";
 
 interface Props {
   stations: Station[];
@@ -76,42 +76,38 @@ const Bikes = ({ journeys, stations }: Props) => {
     setPage(params.page);
   };
 
-  // useEffect(() => {
-  //   console.log(isNumber(filterWord))
-  //  if(isNumber(filterWord)) {
-  //   const numSearchValue = parseFloat(filterWord)
-  //   setFilterNumb(numFilterDistance)
-  //  }
-  // }, [filterWord]);
-
-  // function isNumber(input: any) {
-  //   return /^-?\d*\.?\d+$/.test(input);
-  // }
-
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden", height: 900 }}>
-      <AddJourney stations={stations}/>
+    <Box>
       <Box
         sx={{
           display: "flex",
           flexDirection: "row",
-          width: "50%",
-          padding: 2,
+          width: "98.5%",
+          marginLeft: 3
         }}
       >
+        <AddJourney stations={stations} />
         <Search filterWord={filterWord} setFilterWord={setFilterWord} />
       </Box>
-      <DataGrid
-        rows={rows.filter((row: any) => {
-          return Object.values(row)
-            .join(" ")
-            .toLowerCase()
-            .includes(filterWord.toLowerCase());
-        })}
-        columns={columns}
-        pagination
-      />
-    </Paper>
+      <Box
+        sx={{
+          width: "100%",
+          overflow: "auto",
+          height: "76vh",
+          margin: "auto"
+        }}
+      >
+        <DataGrid
+          rows={rows.filter((row: any) => {
+            return Object.values(row)
+              .join(" ")
+              .toLowerCase()
+              .includes(filterWord.toLowerCase());
+          })}
+          columns={columns}
+        />
+      </Box>
+    </Box>
   );
 };
 

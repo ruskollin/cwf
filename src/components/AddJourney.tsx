@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { TableCell, TableRow, TextField, Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import CancelIcon from "@mui/icons-material/Cancel";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { handleAddNewJourney } from "../services/bikeService";
 import Modal from "./Modal";
 import { Station } from "../types";
@@ -25,6 +27,7 @@ const AddJourney = ({ stations }: Props) => {
   const [showMissingField, setShowMissingField] = useState(false);
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [openAddTab, setOpenAddTab] = useState(false);
 
   const handleAddJourney = () => {
     if (
@@ -63,88 +66,126 @@ const AddJourney = ({ stations }: Props) => {
   };
 
   return (
-    <Box>
-      <TableRow>
-        <TableCell>
-          <TextField
-            select
-            label="Departure Station"
-            value={departureStation}
-            onChange={(e) => setDepartureStation(e.target.value)}
-            style={{ width: 200 }}
-          >
-            {stations.map((station) => (
-              <MenuItem key={station.Nimi} value={station.Nimi}>
-                {station.Nimi}
-              </MenuItem>
-            ))}
-          </TextField>
-        </TableCell>
-        <TableCell>
-          <TextField
-            select
-            label="Return Station"
-            value={returnStation}
-            onChange={(e) => setReturnStation(e.target.value)}
-            style={{ width: 200 }}
-          >
-            {stations.map((station) => (
-              <MenuItem key={station.Nimi} value={station.Nimi}>
-                {station.Nimi}
-              </MenuItem>
-            ))}
-          </TextField>
-        </TableCell>
-        <TableCell>
-          <TextField
-            label="Covered Distance"
-            value={coveredDistance}
-            onChange={(e) => setCoveredDistance(e.target.value)}
+    <Box style={{ display: "flex", flexDirection: "row", height: 100 }}>
+      <Button
+        type="button"
+        title="Add a journey here"
+        onClick={() => setOpenAddTab(true)}
+      >
+        {!openAddTab && (
+          <AddCircleIcon
+            style={{
+              height: 55,
+              borderRadius: "5px",
+              color: "white",
+              background: "#64d984",
+              fontSize: 50,
+              marginTop: -15,
+            }}
           />
-        </TableCell>
-        <TableCell>
-          <TextField
-            label="Duration"
-            value={duration}
-            onChange={(e) => setDuration(e.target.value)}
-          />
-        </TableCell>
-        <TableCell>
-          <DateTimePicker
-            time={startTime}
-            label={"Start"}
-            setTime={setStartTime}
-          />
-        </TableCell>
-        <TableCell>
-          <DateTimePicker time={endTime} label={"End"} setTime={setEndTime} />
-        </TableCell>
-        <TableCell>
+        )}
+      </Button>
+      {openAddTab ? (
+        <Box
+          style={{ display: "flex", flexDirection: "row", marginLeft: "-80px" }}
+        >
           <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAddJourney}
+            type="button"
+            title="Close tab"
+            onClick={() => setOpenAddTab(false)}
           >
-            Add
+            <ArrowRightIcon
+              style={{ color: "#ff8383", fontSize: 50, marginTop: -15 }}
+            />
           </Button>
-        </TableCell>
-      </TableRow>
+          <TableRow>
+            <TableCell>
+              <TextField
+                select
+                label="Departure Station"
+                value={departureStation}
+                onChange={(e) => setDepartureStation(e.target.value)}
+                style={{ width: 170 }}
+              >
+                {stations.map((station) => (
+                  <MenuItem key={station.Nimi} value={station.Nimi}>
+                    {station.Nimi}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </TableCell>
+            <TableCell>
+              <TextField
+                select
+                label="Return Station"
+                value={returnStation}
+                onChange={(e) => setReturnStation(e.target.value)}
+                style={{ width: 170 }}
+              >
+                {stations.map((station) => (
+                  <MenuItem key={station.Nimi} value={station.Nimi}>
+                    {station.Nimi}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </TableCell>
+            <TableCell>
+              <TextField
+                label="Covered Distance"
+                value={coveredDistance}
+                onChange={(e) => setCoveredDistance(e.target.value)}
+                style={{ width: 160 }}
+              />
+            </TableCell>
+            <TableCell>
+              <TextField
+                label="Duration"
+                value={duration}
+                onChange={(e) => setDuration(e.target.value)}
+                style={{ width: 90 }}
+              />
+            </TableCell>
+            <TableCell style={{ width: 185 }}>
+              <DateTimePicker
+                time={startTime}
+                label={"Start"}
+                setTime={setStartTime}
+              />
+            </TableCell>
+            <TableCell style={{ width: 185 }}>
+              <DateTimePicker
+                time={endTime}
+                label={"End"}
+                setTime={setEndTime}
+              />
+            </TableCell>
+            <TableCell>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAddJourney}
+              >
+                Add
+              </Button>
+            </TableCell>
+          </TableRow>
+        </Box>
+      ) : null}
 
       <Modal show={showSuccess}>
         <div>
           <Button
             type="button"
-            onClick={(event) => setShowSuccess(false)}
+            onClick={() => setShowSuccess(false)}
             style={{
               position: "absolute",
-              marginLeft: 200,
-              marginTop: "-12px",
-              zIndex: 2,
+              marginTop: "-47px",
+              marginLeft: "-33px",
             }}
           >
             <CancelIcon style={{ color: "#ff8383", fontSize: 50 }} />
           </Button>
-          <h3>Good job! Successfully added a great journey!</h3>
+          <h3 style={{textAlign: "center"}}>Good job! Successfully added a great journey!</h3>
           <Player src={heartAnimation} loop autoplay />
         </div>
       </Modal>
@@ -153,17 +194,16 @@ const AddJourney = ({ stations }: Props) => {
         <div>
           <Button
             type="button"
-            onClick={(event) => setShowError(false)}
+            onClick={() => setShowError(false)}
             style={{
               position: "absolute",
-              marginLeft: 200,
-              marginTop: "-12px",
-              zIndex: 2,
+              marginTop: "-47px",
+              marginLeft: "-33px",
             }}
           >
             <CancelIcon style={{ color: "#ff8383", fontSize: 50 }} />
           </Button>
-          <h3>
+          <h3 style={{textAlign: "center"}}>
             Sorry! We are experiencing technical problems now. We are fixing
             this now.
           </h3>
@@ -175,17 +215,16 @@ const AddJourney = ({ stations }: Props) => {
         <div>
           <Button
             type="button"
-            onClick={(event) => setShowMissingField(false)}
+            onClick={() => setShowMissingField(false)}
             style={{
               position: "absolute",
-              marginLeft: 200,
-              marginTop: "-12px",
-              zIndex: 2,
+              marginTop: "-47px",
+              marginLeft: "-33px",
             }}
           >
             <CancelIcon style={{ color: "#ff8383", fontSize: 50 }} />
           </Button>
-          <h3>Please check that all fields are complete.</h3>
+          <h3 style={{textAlign: "center"}}>Please check that all fields are complete.</h3>
           <Player
             src={brainAnimation}
             className="player"

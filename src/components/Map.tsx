@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import {
   GoogleMap,
   MarkerF,
@@ -18,23 +18,25 @@ interface Props {
 }
 
 const Map = ({ selectedStation }: Props) => {
+  // const apiKey: string = process.env.api_key;
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: "",
   });
 
   useEffect(() => {
-    console.log(selectedStation);
+    const configValue: any = process.env.api_key
+    console.log('KEY: ', configValue);
   }, []);
 
   return (
-    <div style={{ height: "100vh", width: "100vh" }}>
+    <div style={{ height: "80vh", width: "71vh" }}>
       {!isLoaded ? (
         <h1>Loading...</h1>
       ) : (
         <GoogleMap
           mapContainerClassName="map-container"
-          center={{ lat: 60.1699, lng: 24.9384 }}
-          zoom={15}
+          center={{ lat: selectedStation.y, lng: selectedStation.x  }}
+          zoom={10}
         >
           <MarkerF
             position={{ lat: selectedStation.y, lng: selectedStation.x }}

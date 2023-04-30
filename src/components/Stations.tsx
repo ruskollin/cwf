@@ -8,6 +8,7 @@ import { Station } from "../types";
 import { handleStationCalculations } from "../services/stationService";
 import Modal from "./Modal";
 import CancelIcon from "@mui/icons-material/Cancel";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import Map from "./Map";
 import AddStation from "./AddStation";
 import "../App.css";
@@ -45,6 +46,7 @@ const Stations = ({ stations }: Props) => {
     y: 9,
     name: "",
   });
+  const [openFilterTab, setOpenFilterTab] = useState(false);
 
   const monthsList = [
     "All",
@@ -62,12 +64,7 @@ const Stations = ({ stations }: Props) => {
     "December",
   ];
 
-  const handleJourneys = async (
-    event: React.SyntheticEvent,
-    stationName: string,
-    month: string
-  ) => {
-    event.preventDefault();
+  const handleJourneys = async (stationName: string, month: string) => {
     setIsLoading(true);
 
     await handleStationCalculations(stationName, month).then(
@@ -94,12 +91,12 @@ const Stations = ({ stations }: Props) => {
     );
   };
 
-  const handleShowStation = (event: React.SyntheticEvent) => {
+  const handleShowStation = () => {
+    setChosenMonth("All");
     setShowStation(false);
   };
 
-  const handleShowMap = async (event: React.SyntheticEvent, row: any) => {
-    event.preventDefault();
+  const handleShowMap = async (row: any) => {
     console.log(row);
     setSelectedStation({ x: row.x, y: row.y, name: row.Nimi });
     setShowMap(true);
@@ -111,26 +108,22 @@ const Stations = ({ stations }: Props) => {
   ) => {
     event.preventDefault();
     setChosenMonth(month);
-    handleJourneys(event, stationToShow, month);
+    handleJourneys(stationToShow, month);
   };
 
   const columns: GridColDef[] = [
     {
       field: "FID",
       headerName: "FID",
-      renderCell: () => (
-        <div style={{ display: "none" }} />
-      ),
+      renderCell: () => <div style={{ display: "none" }} />,
       renderHeader: () => {
-        return (
-            <span style={{ display: "none" }} />
-        );
+        return <span style={{ display: "none" }} />;
       },
-      sortable: false, 
+      sortable: false,
       filterable: false,
       disableColumnMenu: true,
       width: 0,
-      minWidth: 0
+      minWidth: 0,
     },
     {
       field: "Name",
@@ -175,14 +168,14 @@ const Stations = ({ stations }: Props) => {
         return (
           <Box>
             <Button
-              onClick={(e) => handleJourneys(e, row.row.Nimi, chosenMonth)}
+              onClick={() => handleJourneys(row.row.Nimi, chosenMonth)}
               variant="contained"
             >
               INFO
             </Button>
 
             <Button
-              onClick={(e) => handleShowMap(e, row.row)}
+              onClick={() => handleShowMap(row.row)}
               variant="contained"
               style={{ marginLeft: "10px" }}
             >
@@ -209,23 +202,23 @@ const Stations = ({ stations }: Props) => {
   }));
 
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <AddStation />
+    <Box>
       <Box
         sx={{
           display: "flex",
           flexDirection: "row",
-          width: "50%",
-          padding: 2,
+          width: "98.5%",
+          marginLeft: 3,
         }}
       >
-      <Search filterWord={filterWord} setFilterWord={setFilterWord} />
+        <AddStation />
+        <Search filterWord={filterWord} setFilterWord={setFilterWord} />
       </Box>
-      <Paper
+      <Box
         sx={{
           width: "100%",
-          overflow: "hidden",
-          height: 950,
+          overflow: "auto",
+          height: "76vh",
           margin: "auto",
         }}
       >
@@ -239,11 +232,11 @@ const Stations = ({ stations }: Props) => {
           columns={columns}
           initialState={{
             sorting: {
-              sortModel: [{ field: 'FID', sort: 'desc' }],
+              sortModel: [{ field: "FID", sort: "desc" }],
             },
           }}
         />
-      </Paper>
+      </Box>
 
       <Modal show={showStation}>
         <div>
@@ -253,49 +246,119 @@ const Stations = ({ stations }: Props) => {
             <div>
               <Button
                 type="button"
-                onClick={(event) => handleShowStation(event)}
+                onClick={handleShowStation}
                 style={{
                   position: "absolute",
-                  marginLeft: 200,
-                  marginTop: "-12px",
+                  marginTop: "-52px",
+                  marginLeft: "-33px"
                 }}
               >
-                <CancelIcon style={{ color: "#ff8383", fontSize: 50 }} />
+                <CancelIcon
+                  style={{
+                    color: "#ff8383",
+                    background: "white",
+                    borderRadius: 24,
+                    fontSize: 50,
+                  }}
+                />
               </Button>
-              <h1
-                style={{
-                  textTransform: "uppercase",
-                  margin: "auto",
-                  marginTop: 20,
-                }}
-              >
-                {stationToShow}
-              </h1>
-              <p>Address: {address}</p>
+              <Box className="hexagonDiv">
+                <Box style={{ paddingLeft: 25, paddingRight: 25}}>
+                  <h2 className="hexagonContent">{stationToShow}</h2>
+                </Box>
+              </Box>
+              <p style={{ textAlign: "center",marginTop: 0 }}>Address: {address}</p>
 
               <div>
-                {monthsList.map((month) => (
-                  <button
-                    key={month}
-                    onClick={(event) => handleChosenMonth(event, month)}
-                  >
-                    {month}
-                  </button>
-                ))}
+                <Button
+                  type="button"
+                  title="Close tab"
+                  onClick={() => setOpenFilterTab(!openFilterTab)}
+                  style={{ height: 10, color: "#6E7D8E" }}
+                >
+                  <CalendarMonthIcon style={{ fontSize: 30, margin: 0 }} />
+                  <p>Filter by month</p>
+                </Button>
+                {openFilterTab && (
+                  <div style={{ marginTop: 5 }}>
+                    {monthsList.map((month) => (
+                      <button
+                        className="buttonStation"
+                        style={{
+                          background:
+                            chosenMonth === month ? "#766a8d" : "inherit",
+                          color: chosenMonth === month ? "white" : "inherit",
+                        }}
+                        key={month}
+                        onClick={(event) => handleChosenMonth(event, month)}
+                      >
+                        {month}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              <div>
-                <h3>People start here: {departures} times</h3>
-                <h3>
-                  The average distance from this station is:{" "}
+              <table className="tableStation">
+                <tr>
+                  <th></th>
+                  <th>Departures</th>
+                  <th>Returns</th>
+                </tr>
+                <tr>
+                  <td>Count</td>
+                  <td>{departures}</td>
+                  <td>{returns}</td>
+                </tr>
+                <tr>
+                  <td>Average Distance</td>
+                  <td>
+                    {averageDistanceStartingAtStation
+                      ? averageDistanceStartingAtStation.toFixed(2)
+                      : "0"}{" "}
+                    kms.
+                  </td>
+                  <td>
+                    {averageDistanceEndingAtStation
+                      ? averageDistanceEndingAtStation.toFixed(2)
+                      : "0"}{" "}
+                        kms.
+                  </td>
+                </tr>
+                <tr>
+                  <td>Popular Stations</td>
+                  <td>
+                    {" "}
+                    {popularReturnStations
+                      .map(
+                        (station: { returnStation: string }) =>
+                        <p>{station.returnStation}</p>
+                      )}
+                  </td>
+                  <td>
+                    {" "}
+                    {popularDepartureStations
+                      .map(
+                        (station: { departureStation: string }) =>
+                          <p>{station.departureStation}</p>
+                      )}
+                  </td>
+                </tr>
+              </table>
+
+              {/* <div>
+                <p>Departures: {departures}</p>
+
+                <p>Average Distance: </p>
+                <Box className="geometricalDiv">
                   {averageDistanceStartingAtStation
                     ? averageDistanceStartingAtStation.toFixed(2)
-                    : "0"}{" "}
+                    : "0"}
                   kms.
-                </h3>
+                </Box>
                 {popularReturnStations.length > 0 && (
                   <div>
-                    <h3>Most go to:</h3>
+                    <p>Most go to:</p>
                     {popularReturnStations
                       .map(
                         (station: { returnStation: string }) =>
@@ -304,17 +367,17 @@ const Stations = ({ stations }: Props) => {
                       .join(", ")}
                   </div>
                 )}
-                <h3>Some have biked to go here: {returns} times</h3>
-                <h3>
-                  The average distance to this station is:{" "}
+                <p>Returns: {returns}</p>
+                <p>
+                  Average Distance:{" "}
                   {averageDistanceEndingAtStation
                     ? averageDistanceEndingAtStation.toFixed(2)
-                    : "0"}{" "}
+                    : "0"}
                   kms.
-                </h3>
+                </p>
                 {popularDepartureStations.length > 0 && (
                   <div>
-                    <h3>Most come from:</h3>
+                    <p>Most come from:</p>
                     {popularDepartureStations
                       .map(
                         (station: { departureStation: string }) =>
@@ -323,7 +386,7 @@ const Stations = ({ stations }: Props) => {
                       .join(", ")}
                   </div>
                 )}
-              </div>
+              </div> */}
             </div>
           )}
         </div>
@@ -333,20 +396,27 @@ const Stations = ({ stations }: Props) => {
         <div>
           <Button
             type="button"
-            onClick={(event) => setShowMap(false)}
+            onClick={() => setShowMap(false)}
             style={{
               position: "absolute",
-              marginLeft: 200,
-              marginTop: "-12px",
+              marginTop: "-30px",
+              marginLeft: "-33px",
               zIndex: 2,
             }}
           >
-            <CancelIcon style={{ color: "#ff8383", fontSize: 50 }} />
+            <CancelIcon
+              style={{
+                color: "#ff8383",
+                background: "white",
+                borderRadius: 24,
+                fontSize: 50,
+              }}
+            />
           </Button>
           <Map selectedStation={selectedStation} />
         </div>
       </Modal>
-    </Paper>
+    </Box>
   );
 };
 
