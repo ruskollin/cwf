@@ -86,7 +86,7 @@ const Bikes = ({ journeys, stations }: Props) => {
           marginLeft: 3
         }}
       >
-        <AddJourney stations={stations} />
+        {/* <AddJourney stations={stations} /> */}
         <Search filterWord={filterWord} setFilterWord={setFilterWord} />
       </Box>
       <Box

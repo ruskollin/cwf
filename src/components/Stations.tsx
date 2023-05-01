@@ -211,7 +211,7 @@ const Stations = ({ stations }: Props) => {
           marginLeft: 3,
         }}
       >
-        <AddStation />
+        {/* <AddStation /> */}
         <Search filterWord={filterWord} setFilterWord={setFilterWord} />
       </Box>
       <Box
@@ -271,6 +271,7 @@ const Stations = ({ stations }: Props) => {
 
               <div>
                 <Button
+                  className="filterByMonth"
                   type="button"
                   title="Close tab"
                   onClick={() => setOpenFilterTab(!openFilterTab)}
@@ -283,7 +284,7 @@ const Stations = ({ stations }: Props) => {
                   <div style={{ marginTop: 5 }}>
                     {monthsList.map((month) => (
                       <button
-                        className="buttonStation"
+                        className="buttonListStation"
                         style={{
                           background:
                             chosenMonth === month ? "#766a8d" : "inherit",

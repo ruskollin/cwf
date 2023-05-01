@@ -18,7 +18,8 @@ const Search = ({ filterWord, setFilterWord }: Props) => {
 
   return (
     <Box style={{ display: "flex", flexDirection: "row", height: 100}}>
-      <Button
+      {/* <Button
+        className="searchButton"
         type="button"
         title={openSearchTab ? "Close tab" : "Search"}
         onClick={() => setOpenSearchTab(!openSearchTab)}
@@ -32,9 +33,10 @@ const Search = ({ filterWord, setFilterWord }: Props) => {
             style={{ height: 55, borderRadius: "5px", color: "white", background: "#64d984", fontSize: 50, marginTop: -15 }}
           />
         )}
-      </Button>{" "}
-      {openSearchTab ? (
+      </Button>{" "} */}
+      {/* {openSearchTab && */}
         <TextField
+          data-testid="search"
           id="search"
           label="Search"
           variant="outlined"
@@ -60,7 +62,7 @@ const Search = ({ filterWord, setFilterWord }: Props) => {
             )
           }}
         />
-      ) : null}
+      {/* } */}
     </Box>
   );
 };

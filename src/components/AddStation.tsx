@@ -65,7 +65,7 @@ const AddStation = () => {
 
   return (
     <Box className="addStationsBox">
-      <Button
+      {/* <Button
         type="button"
         title="Add a station here"
         className="addStationButton"
@@ -84,7 +84,7 @@ const AddStation = () => {
           />
         )}
       </Button>
-      {openAddTab ? (
+      {openAddTab ? ( */}
         <Box
           style={{ display: "flex", flexDirection: "row", marginLeft: "-80px" }}
         >
@@ -166,6 +166,7 @@ const AddStation = () => {
             </TableCell>
             <TableCell>
               <Button
+              className="addButton"
                 variant="contained"
                 color="primary"
                 onClick={handleAddStation}
@@ -175,10 +176,10 @@ const AddStation = () => {
             </TableCell>
           </TableRow>
         </Box>
-      ) : null}
+      {/* ) : null} */}
 
       <Modal show={showSuccess}>
-        <div>
+      <div className="successDiv">
           <Button
             type="button"
             onClick={() => setShowSuccess(false)}

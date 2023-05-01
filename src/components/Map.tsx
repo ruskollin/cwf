@@ -29,7 +29,7 @@ const Map = ({ selectedStation }: Props) => {
   }, []);
 
   return (
-    <div style={{ height: "80vh", width: "71vh" }}>
+    <div className="mapPage">
       {!isLoaded ? (
         <h1>Loading...</h1>
       ) : (

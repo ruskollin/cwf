@@ -108,6 +108,11 @@ button.focus{
     height: 100
 }
 
+.mapPage {
+  height: 80vh;
+  width: 71vh;
+}
+
 .map-container {
   height: inherit;
   width: inherit;
@@ -130,7 +135,7 @@ button.focus{
   text-transform: uppercase;
 }
 
-.buttonStation {
+.buttonListStation {
   background-image: linear-gradient(to bottom right, #e6f5fd, #f9fcfe);
   border-radius: 10px;
   border-color: white;
@@ -143,7 +148,7 @@ button.focus{
   transition: all 0.2s ease-in-out;
 }
 
-.buttonStation:hover {
+.buttonListStation:hover {
   transform: scale(1.05);
 }
 

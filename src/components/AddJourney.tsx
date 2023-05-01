@@ -67,7 +67,8 @@ const AddJourney = ({ stations }: Props) => {
 
   return (
     <Box style={{ display: "flex", flexDirection: "row", height: 100 }}>
-      <Button
+      {/* <Button
+        className="addJourneyButton"
         type="button"
         title="Add a journey here"
         onClick={() => setOpenAddTab(true)}
@@ -84,12 +85,12 @@ const AddJourney = ({ stations }: Props) => {
             }}
           />
         )}
-      </Button>
-      {openAddTab ? (
+      </Button> */}
+      {/* {openAddTab ? ( */}
         <Box
-          style={{ display: "flex", flexDirection: "row", marginLeft: "-80px" }}
+          style={{ display: "flex", flexDirection: "column" }}
         >
-          <Button
+          {/* <Button
             type="button"
             title="Close tab"
             onClick={() => setOpenAddTab(false)}
@@ -97,11 +98,11 @@ const AddJourney = ({ stations }: Props) => {
             <ArrowRightIcon
               style={{ color: "#ff8383", fontSize: 50, marginTop: -15 }}
             />
-          </Button>
-          <TableRow>
-            <TableCell>
+          </Button> */}
+          
               <TextField
                 select
+                className="departureStation"
                 label="Departure Station"
                 value={departureStation}
                 onChange={(e) => setDepartureStation(e.target.value)}
@@ -113,10 +114,10 @@ const AddJourney = ({ stations }: Props) => {
                   </MenuItem>
                 ))}
               </TextField>
-            </TableCell>
-            <TableCell>
+        
               <TextField
                 select
+                className="returnStation"
                 label="Return Station"
                 value={returnStation}
                 onChange={(e) => setReturnStation(e.target.value)}
@@ -128,52 +129,52 @@ const AddJourney = ({ stations }: Props) => {
                   </MenuItem>
                 ))}
               </TextField>
-            </TableCell>
-            <TableCell>
+           
               <TextField
+                data-testid="coveredDistance"
                 label="Covered Distance"
                 value={coveredDistance}
                 onChange={(e) => setCoveredDistance(e.target.value)}
                 style={{ width: 160 }}
               />
-            </TableCell>
-            <TableCell>
+      
               <TextField
+                data-testid="duration"
                 label="Duration"
                 value={duration}
                 onChange={(e) => setDuration(e.target.value)}
                 style={{ width: 90 }}
               />
-            </TableCell>
-            <TableCell style={{ width: 185 }}>
+           
+           <div className="datepicker1">
               <DateTimePicker
+                data-testid="startTime"
                 time={startTime}
                 label={"Start"}
                 setTime={setStartTime}
               />
-            </TableCell>
-            <TableCell style={{ width: 185 }}>
+         </div>
+         <div className="datepicker2">
               <DateTimePicker
+                data-testid="endTime"
                 time={endTime}
                 label={"End"}
                 setTime={setEndTime}
               />
-            </TableCell>
-            <TableCell>
+                </div>
               <Button
+                className="addButton"
                 variant="contained"
                 color="primary"
                 onClick={handleAddJourney}
               >
                 Add
               </Button>
-            </TableCell>
-          </TableRow>
         </Box>
-      ) : null}
+      {/* ) : null} */}
 
       <Modal show={showSuccess}>
-        <div>
+        <div className="successDiv">
           <Button
             type="button"
             onClick={() => setShowSuccess(false)}
