@@ -50,7 +50,7 @@ describe("Testing STATION page", () => {
 
   it('should open the info of station when the INFO button is clicked', () => {
     cy.contains('INFO').click()
-    cy.get('.tableStation');
+    .get('.tableStation');
   });
 
   it("filter by month should show results of calculations from backend", () => {
@@ -144,8 +144,8 @@ describe("Testing ADD JOURNEY page", () => {
       .contains("Westendinasema")
       .click()
       .get('[data-testid="coveredDistance"]')
-      .type("222");
-    cy.get('[data-testid="duration"]')
+      .type("222")
+      .get('[data-testid="duration"]')
       .type("222")
       .get(".datepicker1")
       .click()

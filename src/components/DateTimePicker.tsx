@@ -5,21 +5,26 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { MobileDateTimePicker } from "@mui/x-date-pickers/MobileDateTimePicker";
 
 interface Props {
-  time: string;
+  time: Date;
   label: string;
-  setTime: (time: string) => void;
+  setTime: (time: Date) => void;
 }
 
 function DateTimePicker({ time, label, setTime }: Props) {
+  
   const handleDateChange = (newValue: any) => {
     const dateObj = new Date(newValue.$d);
-    const formattedDate = dateObj.toISOString();
-    setTime(formattedDate);
+    console.log(dateObj)
+    // const formattedDate = dateObj.toISOString();
+    setTime(dateObj);
   };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <MobileDateTimePicker onChange={handleDateChange} label={label}/>
+      <MobileDateTimePicker
+        onChange={handleDateChange}
+        label={label}
+      />
     </LocalizationProvider>
   );
 }

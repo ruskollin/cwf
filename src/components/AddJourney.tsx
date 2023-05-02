@@ -22,12 +22,12 @@ const AddJourney = ({ stations }: Props) => {
   const [returnStation, setReturnStation] = useState("");
   const [coveredDistance, setCoveredDistance] = useState("");
   const [duration, setDuration] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
+  const [startTime, setStartTime] = useState(new Date());
+  const [endTime, setEndTime] = useState(new Date());
   const [showMissingField, setShowMissingField] = useState(false);
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [openAddTab, setOpenAddTab] = useState(false);
+  const [openErrorMessage, setOpenErrorMessage] = useState(false);
 
   const handleAddJourney = () => {
     if (
@@ -38,139 +38,161 @@ const AddJourney = ({ stations }: Props) => {
       !startTime ||
       !endTime
     ) {
+      console.log(
+        coveredDistance,
+        duration,
+        "start",
+        startTime,
+        "end",
+        endTime
+      );
       setShowMissingField(true);
     } else {
-      handleAddNewJourney({
-        Departure_station_name: departureStation,
-        Return_station_name: returnStation,
-        Covered_distance: coveredDistance,
-        Departure: startTime,
-        Return: endTime,
-        Duration: duration,
-      }).then((response) => {
-        if (response.success === true) {
-          setShowSuccess(true);
-          setDepartureStation("");
-          setReturnStation("");
-          setCoveredDistance("");
-          setDuration("");
-          setStartTime("");
-          setEndTime("");
-          setShowMissingField(false);
-        } else {
-          setShowError(true);
-          console.log("Error");
-        }
-      });
+      if (checkValidDistance() && checkValidDuration() && checkStartEndTime()) {
+        handleAddNewJourney({
+          Departure_station_name: departureStation,
+          Return_station_name: returnStation,
+          Covered_distance: coveredDistance,
+          Departure: startTime.toISOString(),
+          Return: endTime.toISOString(),
+          Duration: duration,
+        }).then((response) => {
+          if (response.success === true) {
+            setShowSuccess(true);
+            setDepartureStation("");
+            setReturnStation("");
+            setCoveredDistance("");
+            setDuration("");
+            setStartTime(new Date());
+            setEndTime(new Date());
+            setShowMissingField(false);
+            setOpenErrorMessage(false);
+          } else {
+            setShowError(true);
+            console.log("Error");
+          }
+        });
+      } else {
+        setOpenErrorMessage(true);
+      }
     }
   };
 
+  function checkValidDistance() {
+    if (
+      /^\d*\.?\d*$/.test(coveredDistance) &&
+      parseFloat(coveredDistance) >= 0.01
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function checkValidDuration() {
+    if (/^\d*\.?\d*$/.test(duration) && parseFloat(duration) >= 0.16) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function checkStartEndTime() {
+    if (endTime.getTime() > startTime.getTime()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   return (
-    <Box style={{ display: "flex", flexDirection: "row", height: 100 }}>
-      {/* <Button
-        className="addJourneyButton"
-        type="button"
-        title="Add a journey here"
-        onClick={() => setOpenAddTab(true)}
-      >
-        {!openAddTab && (
-          <AddCircleIcon
-            style={{
-              height: 55,
-              borderRadius: "5px",
-              color: "white",
-              background: "#64d984",
-              fontSize: 50,
-              marginTop: -15,
-            }}
-          />
-        )}
-      </Button> */}
-      {/* {openAddTab ? ( */}
-        <Box
-          style={{ display: "flex", flexDirection: "column" }}
+    <Box style={{ padding: 10 }}>
+      {openErrorMessage && (
+        <>
+          <p style={{ color: "red" }}>
+            Please check that the duration(more than 0.16) and distance(more
+            than 0.01) are correct.
+          </p>
+          <p style={{ color: "red" }}>
+            Please check that the end time is not before the start time.
+          </p>
+        </>
+      )}
+      <Box style={{ display: "flex", flexDirection: "column", justifyContent: "space-around", height: 500}}>
+        <TextField
+          select
+          className="departureStation"
+          label="Departure Station"
+          value={departureStation}
+          onChange={(e) => setDepartureStation(e.target.value)}
+          style={{ width: 223 }}
         >
-          {/* <Button
-            type="button"
-            title="Close tab"
-            onClick={() => setOpenAddTab(false)}
-          >
-            <ArrowRightIcon
-              style={{ color: "#ff8383", fontSize: 50, marginTop: -15 }}
-            />
-          </Button> */}
-          
-              <TextField
-                select
-                className="departureStation"
-                label="Departure Station"
-                value={departureStation}
-                onChange={(e) => setDepartureStation(e.target.value)}
-                style={{ width: 170 }}
-              >
-                {stations.map((station) => (
-                  <MenuItem key={station.Nimi} value={station.Nimi}>
-                    {station.Nimi}
-                  </MenuItem>
-                ))}
-              </TextField>
-        
-              <TextField
-                select
-                className="returnStation"
-                label="Return Station"
-                value={returnStation}
-                onChange={(e) => setReturnStation(e.target.value)}
-                style={{ width: 170 }}
-              >
-                {stations.map((station) => (
-                  <MenuItem key={station.Nimi} value={station.Nimi}>
-                    {station.Nimi}
-                  </MenuItem>
-                ))}
-              </TextField>
-           
-              <TextField
-                data-testid="coveredDistance"
-                label="Covered Distance"
-                value={coveredDistance}
-                onChange={(e) => setCoveredDistance(e.target.value)}
-                style={{ width: 160 }}
-              />
-      
-              <TextField
-                data-testid="duration"
-                label="Duration"
-                value={duration}
-                onChange={(e) => setDuration(e.target.value)}
-                style={{ width: 90 }}
-              />
-           
-           <div className="datepicker1">
-              <DateTimePicker
-                data-testid="startTime"
-                time={startTime}
-                label={"Start"}
-                setTime={setStartTime}
-              />
-         </div>
-         <div className="datepicker2">
-              <DateTimePicker
-                data-testid="endTime"
-                time={endTime}
-                label={"End"}
-                setTime={setEndTime}
-              />
-                </div>
-              <Button
-                className="addButton"
-                variant="contained"
-                color="primary"
-                onClick={handleAddJourney}
-              >
-                Add
-              </Button>
-        </Box>
+          {stations.map((station) => (
+            <MenuItem key={station.Nimi} value={station.Nimi}>
+              {station.Nimi}
+            </MenuItem>
+          ))}
+        </TextField>
+
+        <TextField
+          select
+          className="returnStation"
+          label="Return Station"
+          value={returnStation}
+          onChange={(e) => setReturnStation(e.target.value)}
+          style={{ width: 223 }}
+        >
+          {stations.map((station) => (
+            <MenuItem key={station.Nimi} value={station.Nimi}>
+              {station.Nimi}
+            </MenuItem>
+          ))}
+        </TextField>
+
+        <TextField
+          data-testid="coveredDistance"
+          label="Covered Distance"
+          value={coveredDistance}
+          onChange={(e) => setCoveredDistance(e.target.value)}
+          style={{ width: 223 }}
+        />
+
+        <TextField
+          data-testid="duration"
+          label="Duration"
+          value={duration}
+          onChange={(e) => setDuration(e.target.value)}
+          style={{ width: 223 }}
+        />
+
+        <div className="datepicker1" style={{width: 222}}>
+          <DateTimePicker
+            data-testid="startTime"
+            time={startTime}
+            label={"Start"}
+            setTime={setStartTime}
+          />
+        </div>
+
+        <div className="datepicker2" style={{width: 222}}>
+          <DateTimePicker
+            data-testid="endTime"
+            time={endTime}
+            label={"End"}
+            setTime={setEndTime}
+          />
+        </div>
+
+        <Button
+          className="addButton"
+          variant="contained"
+          color="primary"
+          onClick={handleAddJourney}
+          style={{width: 20}}
+        >
+          Add
+        </Button>
+      </Box>
       {/* ) : null} */}
 
       <Modal show={showSuccess}>
@@ -186,7 +208,9 @@ const AddJourney = ({ stations }: Props) => {
           >
             <CancelIcon style={{ color: "#ff8383", fontSize: 50 }} />
           </Button>
-          <h3 style={{textAlign: "center"}}>Good job! Successfully added a great journey!</h3>
+          <h3 style={{ textAlign: "center" }}>
+            Good job! Successfully added a great journey!
+          </h3>
           <Player src={heartAnimation} loop autoplay />
         </div>
       </Modal>
@@ -204,7 +228,7 @@ const AddJourney = ({ stations }: Props) => {
           >
             <CancelIcon style={{ color: "#ff8383", fontSize: 50 }} />
           </Button>
-          <h3 style={{textAlign: "center"}}>
+          <h3 style={{ textAlign: "center" }}>
             Sorry! We are experiencing technical problems now. We are fixing
             this now.
           </h3>
@@ -225,7 +249,9 @@ const AddJourney = ({ stations }: Props) => {
           >
             <CancelIcon style={{ color: "#ff8383", fontSize: 50 }} />
           </Button>
-          <h3 style={{textAlign: "center"}}>Please check that all fields are complete.</h3>
+          <h3 style={{ textAlign: "center" }}>
+            Please check that all fields are complete.
+          </h3>
           <Player
             src={brainAnimation}
             className="player"

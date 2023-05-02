@@ -64,122 +64,87 @@ const AddStation = () => {
   };
 
   return (
-    <Box className="addStationsBox">
-      {/* <Button
-        type="button"
-        title="Add a station here"
-        className="addStationButton"
-        onClick={() => setOpenAddTab(true)}
+    <Box
+      className="addStationsBox"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-around",
+        height: 600,
+        marginLeft: "20px"
+      }}
+    >
+      <TextField
+        data-testid="nameStation"
+        label="Station Name"
+        value={nameStation}
+        onChange={(e) => setNameStation(e.target.value)}
+        style={{ width: 223 }}
+      />
+
+      <TextField
+        data-testid="address"
+        label="Address"
+        value={address}
+        onChange={(e) => setAddress(e.target.value)}
+        style={{ width: 223 }}
+      />
+
+      <TextField
+        data-testid="city"
+        label="City"
+        value={city}
+        onChange={(e) => setCity(e.target.value)}
+        style={{ width: 223 }}
+      />
+
+      <TextField
+        data-testid="operator"
+        label="Operator"
+        value={operator}
+        onChange={(e) => setOperator(e.target.value)}
+        style={{ width: 223 }}
+      />
+
+      <TextField
+        data-testid="capacity"
+        label="Capacity"
+        type="number"
+        value={capacity}
+        onChange={(e) => setCapacity(Number(e.target.value))}
+        style={{ width: 223 }}
+      />
+
+      <TextField
+        data-testid="xMap"
+        label="X"
+        type="number"
+        value={xMap}
+        onChange={(e) => setXMap(Number(e.target.value))}
+        style={{ width: 223 }}
+      />
+
+      <TextField
+        data-testid="yMap"
+        label="Y"
+        type="number"
+        value={yMap}
+        onChange={(e) => setYMap(Number(e.target.value))}
+        style={{ width: 223 }}
+      />
+
+      <Button
+        className="addButton"
+        variant="contained"
+        color="primary"
+        onClick={handleAddStation}
+        style={{width: 20}}
       >
-        {!openAddTab && (
-          <AddCircleIcon
-            style={{
-              height: 55,
-              borderRadius: "5px",
-              color: "white",
-              background: "#64d984",
-              fontSize: 50,
-              marginTop: -15,
-            }}
-          />
-        )}
+        Add
       </Button>
-      {openAddTab ? ( */}
-        <Box
-          style={{ display: "flex", flexDirection: "row", marginLeft: "-80px" }}
-        >
-          <Button
-            type="button"
-            title="Close tab"
-            onClick={() => setOpenAddTab(false)}
-          >
-            <ArrowRightIcon
-              style={{ color: "#ff8383", fontSize: 50, marginTop: -15 }}
-            />
-          </Button>
-          <TableRow>
-            <TableCell>
-              <TextField
-                data-testid="nameStation"
-                label="Station Name"
-                value={nameStation}
-                onChange={(e) => setNameStation(e.target.value)}
-                style={{ width: 130, zIndex: 600 }}
-              />
-            </TableCell>
-            <TableCell>
-              <TextField
-                data-testid="address"
-                label="Address"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                style={{ width: 90, zIndex: 600 }}
-              />
-            </TableCell>
-            <TableCell>
-              <TextField
-                data-testid="city"
-                label="City"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                style={{ width: 90, zIndex: 600 }}
-              />
-            </TableCell>
-            <TableCell>
-              <TextField
-                data-testid="operator"
-                label="Operator"
-                value={operator}
-                onChange={(e) => setOperator(e.target.value)}
-                style={{ width: 90, zIndex: 600 }}
-              />
-            </TableCell>
-            <TableCell>
-              <TextField
-                data-testid="capacity"
-                label="Capacity"
-                type="number"
-                value={capacity}
-                onChange={(e) => setCapacity(Number(e.target.value))}
-                style={{ width: 90, zIndex: 600 }}
-              />
-            </TableCell>
-            <TableCell>
-              <TextField
-                data-testid="xMap"
-                label="X"
-                type="number"
-                value={xMap}
-                onChange={(e) => setXMap(Number(e.target.value))}
-                style={{ width: 90, zIndex: 600 }}
-              />
-            </TableCell>
-            <TableCell>
-              <TextField
-                data-testid="yMap"
-                label="Y"
-                type="number"
-                value={yMap}
-                onChange={(e) => setYMap(Number(e.target.value))}
-                style={{ width: 90, zIndex: 600 }}
-              />
-            </TableCell>
-            <TableCell>
-              <Button
-              className="addButton"
-                variant="contained"
-                color="primary"
-                onClick={handleAddStation}
-              >
-                Add
-              </Button>
-            </TableCell>
-          </TableRow>
-        </Box>
-      {/* ) : null} */}
 
       <Modal show={showSuccess}>
-      <div className="successDiv">
+        <div className="successDiv">
           <Button
             type="button"
             onClick={() => setShowSuccess(false)}
@@ -191,9 +156,12 @@ const AddStation = () => {
           >
             <CancelIcon style={{ color: "#ff8383", fontSize: 50 }} />
           </Button>
-          <h3 style={{ textAlign: "center" }}>Good job! Successfully added the station!</h3>
-          <div style={{height:350}}><Player src={heartAnimation} loop autoplay /></div>
-        
+          <h3 style={{ textAlign: "center" }}>
+            Good job! Successfully added the station!
+          </h3>
+          <div style={{ height: 350 }}>
+            <Player src={heartAnimation} loop autoplay />
+          </div>
         </div>
       </Modal>
 
