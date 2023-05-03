@@ -105,10 +105,15 @@ const AddJourney = ({ stations }: Props) => {
     }
   }
 
+  function handleCloseSuccessDiv() {
+    setShowSuccess(false);
+    window.location.reload();
+  }
+
   return (
     <Box style={{ padding: 10 }}>
       {openErrorMessage && (
-        <>
+        <div className="errorBox">
           <p style={{ color: "red" }}>
             Please check that the duration(more than 0.16) and distance(more
             than 0.01) are correct.
@@ -116,7 +121,7 @@ const AddJourney = ({ stations }: Props) => {
           <p style={{ color: "red" }}>
             Please check that the end time is not before the start time.
           </p>
-        </>
+        </div>
       )}
       <Box style={{ display: "flex", flexDirection: "column", justifyContent: "space-around", height: 500}}>
         <TextField
@@ -199,7 +204,7 @@ const AddJourney = ({ stations }: Props) => {
         <div className="successDiv">
           <Button
             type="button"
-            onClick={() => setShowSuccess(false)}
+            onClick={handleCloseSuccessDiv}
             style={{
               position: "absolute",
               marginTop: "-47px",
@@ -237,7 +242,7 @@ const AddJourney = ({ stations }: Props) => {
       </Modal>
 
       <Modal show={showMissingField}>
-        <div>
+        <div className="missingFieldsDiv">
           <Button
             type="button"
             onClick={() => setShowMissingField(false)}

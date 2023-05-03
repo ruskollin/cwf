@@ -39,11 +39,11 @@ const Sidebar = (props: any) => {
       </Link>
 
       <Link to="/addJourney" onClick={event => closeSideBar("ADD JOURNEY")}>
-        <p className="menu-item">🚵‍♂️ ADD A JOURNEY</p>
+        <p className="menu-item">🐶 ADD A JOURNEY</p>
       </Link>
 
       <Link to="/addStation" onClick={event => closeSideBar("ADD STATION")}>
-        <p className="menu-item">🚵‍♂️ ADD A STATION</p>
+        <p className="menu-item">🐾 ADD A STATION</p>
       </Link>
 
       {/* <Link to="/maps" onClick={event => closeSideBar("MAP")}>

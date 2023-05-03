@@ -22,7 +22,7 @@ const AddStation = () => {
   const [showMissingField, setShowMissingField] = useState(false);
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [openAddTab, setOpenAddTab] = useState(false);
+  const [openErrorMessage, setOpenErrorMessage] = useState(false);
 
   const handleAddStation = () => {
     if (
@@ -36,30 +36,36 @@ const AddStation = () => {
     ) {
       setShowMissingField(true);
     } else {
-      handleAddNewStation({
-        nameStation,
-        address,
-        city,
-        operator,
-        capacity,
-        xMap,
-        yMap,
-      }).then((response) => {
-        if (response.success === true) {
-          setShowSuccess(true);
-          setNameStation("");
-          setAddress("");
-          setCity("");
-          setOperator("");
-          setCapacity(0);
-          setXMap(0.0);
-          setYMap(0.0);
-          setShowMissingField(false);
-        } else {
-          setShowError(true);
-          console.log("Error");
-        }
-      });
+      console.log(capacity)
+      if (capacity < 0) {
+        setOpenErrorMessage(true);
+      } else {
+        handleAddNewStation({
+          nameStation,
+          address,
+          city,
+          operator,
+          capacity,
+          xMap,
+          yMap,
+        }).then((response) => {
+          if (response.success === true) {
+            setShowSuccess(true);
+            setOpenErrorMessage(false);
+            setNameStation("");
+            setAddress("");
+            setCity("");
+            setOperator("");
+            setCapacity(0);
+            setXMap(0.0);
+            setYMap(0.0);
+            setShowMissingField(false);
+          } else {
+            setShowError(true);
+            console.log("Error");
+          }
+        });
+      }
     }
   };
 
@@ -71,9 +77,16 @@ const AddStation = () => {
         flexDirection: "column",
         justifyContent: "space-around",
         height: 600,
-        marginLeft: "20px"
+        marginLeft: "20px",
       }}
     >
+      {openErrorMessage && (
+        <div className="errorBox">
+          <p style={{ color: "red" }}>
+            Please check that the capacity is a positive number.
+          </p>
+        </div>
+      )}
       <TextField
         data-testid="nameStation"
         label="Station Name"
@@ -112,6 +125,7 @@ const AddStation = () => {
         type="number"
         value={capacity}
         onChange={(e) => setCapacity(Number(e.target.value))}
+        InputProps={{ inputProps: { min: 0 } }}
         style={{ width: 223 }}
       />
 
@@ -138,7 +152,7 @@ const AddStation = () => {
         variant="contained"
         color="primary"
         onClick={handleAddStation}
-        style={{width: 20}}
+        style={{ width: 20 }}
       >
         Add
       </Button>
@@ -187,7 +201,7 @@ const AddStation = () => {
       </Modal>
 
       <Modal show={showMissingField}>
-        <div>
+        <div className="missingFieldDiv">
           <Button
             type="button"
             onClick={() => setShowMissingField(false)}
