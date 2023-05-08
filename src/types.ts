@@ -15,7 +15,7 @@ export interface Station {
   id: string;
 }
 
-export interface Bike {
+export interface Journey {
   Covered_distance: number;
   Departure: string;
   Departure_station_id: number;

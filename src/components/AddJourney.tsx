@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { TableCell, TableRow, TextField, Button } from "@mui/material";
+import { TextField, Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import CancelIcon from "@mui/icons-material/Cancel";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { handleAddNewJourney } from "../services/bikeService";
+import { handleAddNewJourney } from "../services/journeyService";
 import Modal from "./Modal";
 import { Station } from "../types";
 import { Player } from "@lottiefiles/react-lottie-player";
@@ -38,14 +36,6 @@ const AddJourney = ({ stations }: Props) => {
       !startTime ||
       !endTime
     ) {
-      console.log(
-        coveredDistance,
-        duration,
-        "start",
-        startTime,
-        "end",
-        endTime
-      );
       setShowMissingField(true);
     } else {
       if (checkValidDistance() && checkValidDuration() && checkStartEndTime()) {
@@ -69,7 +59,6 @@ const AddJourney = ({ stations }: Props) => {
             setOpenErrorMessage(false);
           } else {
             setShowError(true);
-            console.log("Error");
           }
         });
       } else {
@@ -79,6 +68,7 @@ const AddJourney = ({ stations }: Props) => {
   };
 
   function checkValidDistance() {
+    //distance should be 10 meters or more (0.01 kms)
     if (
       /^\d*\.?\d*$/.test(coveredDistance) &&
       parseFloat(coveredDistance) >= 0.01
@@ -90,6 +80,7 @@ const AddJourney = ({ stations }: Props) => {
   }
 
   function checkValidDuration() {
+    //duration should be 10 seconds or more (0.16 secs)
     if (/^\d*\.?\d*$/.test(duration) && parseFloat(duration) >= 0.16) {
       return true;
     } else {
@@ -123,7 +114,15 @@ const AddJourney = ({ stations }: Props) => {
           </p>
         </div>
       )}
-      <Box style={{ display: "flex", flexDirection: "column", justifyContent: "space-around", height: 500}}>
+
+      <Box
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-around",
+          height: 500,
+        }}
+      >
         <TextField
           select
           className="departureStation"
@@ -170,19 +169,17 @@ const AddJourney = ({ stations }: Props) => {
           style={{ width: 223 }}
         />
 
-        <div className="datepicker1" style={{width: 222}}>
+        <div className="datepicker1" style={{ width: 222 }}>
           <DateTimePicker
             data-testid="startTime"
-            time={startTime}
             label={"Start"}
             setTime={setStartTime}
           />
         </div>
 
-        <div className="datepicker2" style={{width: 222}}>
+        <div className="datepicker2" style={{ width: 222 }}>
           <DateTimePicker
             data-testid="endTime"
-            time={endTime}
             label={"End"}
             setTime={setEndTime}
           />
@@ -193,12 +190,11 @@ const AddJourney = ({ stations }: Props) => {
           variant="contained"
           color="primary"
           onClick={handleAddJourney}
-          style={{width: 20}}
+          style={{ width: 20 }}
         >
           Add
         </Button>
       </Box>
-      {/* ) : null} */}
 
       <Modal show={showSuccess}>
         <div className="successDiv">

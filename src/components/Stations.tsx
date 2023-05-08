@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Search from "./Search";
@@ -10,7 +9,6 @@ import Modal from "./Modal";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import Map from "./Map";
-import AddStation from "./AddStation";
 import "../App.css";
 
 interface Props {
@@ -211,7 +209,6 @@ const Stations = ({ stations }: Props) => {
           marginLeft: 3,
         }}
       >
-        {/* <AddStation /> */}
         <Search filterWord={filterWord} setFilterWord={setFilterWord} />
       </Box>
       <Box

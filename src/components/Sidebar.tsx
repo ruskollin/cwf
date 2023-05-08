@@ -2,6 +2,7 @@ import { useState } from "react";
 import { bubble as MyMenu } from "react-burger-menu";
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
+import "../App.css";
 
 const Sidebar = (props: any) => {
   const [isOpen, setOpen] = useState(false);
@@ -18,7 +19,7 @@ const Sidebar = (props: any) => {
 
   return (
     <Box className="menuBar">
-      <div style={{backgroundColor: "red", width: "100%"}}><h3 style={{marginTop: "22px", position: "fixed", top: 0, left: 100}}>{title}</h3></div>
+      <div><h3 className="title">{title}</h3></div>
       
     <MyMenu
       {...props}
@@ -26,29 +27,26 @@ const Sidebar = (props: any) => {
       onOpen={handleIsOpen}
       onClose={handleIsOpen}
     >
-      <Link to="/" onClick={event => closeSideBar("HOME")}>
+      <Link to="/" onClick={() => closeSideBar("HOME")}>
         <p className="menu-item">🏠 HOMEPAGE</p>
       </Link>
 
-      <Link to="/stations" onClick={event => closeSideBar("STATIONS")}>
+      <Link to="/stations" onClick={() => closeSideBar("STATIONS")}>
         <p className="menu-item"> 📍 STATIONS</p>
       </Link>
 
-      <Link to="/journeys" onClick={event => closeSideBar("JOURNEYS")}>
+      <Link to="/journeys" onClick={() => closeSideBar("JOURNEYS")}>
         <p className="menu-item">🚵‍♂️ JOURNEYS</p>
       </Link>
 
-      <Link to="/addJourney" onClick={event => closeSideBar("ADD JOURNEY")}>
+      <Link to="/addJourney" onClick={() => closeSideBar("ADD JOURNEY")}>
         <p className="menu-item">🐶 ADD A JOURNEY</p>
       </Link>
 
-      <Link to="/addStation" onClick={event => closeSideBar("ADD STATION")}>
+      <Link to="/addStation" onClick={() => closeSideBar("ADD STATION")}>
         <p className="menu-item">🐾 ADD A STATION</p>
       </Link>
-
-      {/* <Link to="/maps" onClick={event => closeSideBar("MAP")}>
-        <p className="menu-item">🗺️ MAP</p>
-      </Link> */}
+      
     </MyMenu>
     </Box>
   );

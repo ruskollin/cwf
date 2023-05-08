@@ -8,7 +8,6 @@ const HomePage = () => {
   const [isAnimationStopped, setIsAnimationStopped] = useState(false);
 
   const stopAnimation = () => {
-    console.log(isAnimationStopped);
     setIsAnimationStopped(!isAnimationStopped);
     const animationDiv: any = document.querySelector(".moveAnimation");
     if (isAnimationStopped) {

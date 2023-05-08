@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { TableCell, TableRow, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CancelIcon from "@mui/icons-material/Cancel";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { handleAddNewStation } from "../services/stationService";
 import Modal from "./Modal";
 import { Player } from "@lottiefiles/react-lottie-player";
@@ -36,7 +34,6 @@ const AddStation = () => {
     ) {
       setShowMissingField(true);
     } else {
-      console.log(capacity)
       if (capacity < 0) {
         setOpenErrorMessage(true);
       } else {
@@ -62,7 +59,6 @@ const AddStation = () => {
             setShowMissingField(false);
           } else {
             setShowError(true);
-            console.log("Error");
           }
         });
       }
