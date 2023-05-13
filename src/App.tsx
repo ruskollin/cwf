@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { getAllStations } from "./services/stationService";
-import { getAllJourneys, getSucceedingJourneys } from "./services/journeyService";
+import {
+  getAllJourneys
+} from "./services/journeyService";
 import { Station, Journey } from "./types";
 import Stations from "./components/Stations";
 import Journeys from "./components/Journeys";
@@ -14,6 +16,12 @@ import "./App.css";
 function App() {
   const [stations, setStations] = useState<Station[]>([]);
   const [journeys, setJourneys] = useState<Journey[]>([]);
+  const [totalJourneys, setTotalJourneys] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [paginationModel, setPaginationModel] = useState({
+    pageSize: 100,
+    page: 0,
+  });
 
   useEffect(() => {
     getAllStations().then((data) => {
@@ -22,15 +30,27 @@ function App() {
   }, []);
 
   useEffect(() => {
-    getAllJourneys().then((data) => {
-      setJourneys(data);
-    });
+    // getAllJourneys().then((data: any) => {
+    //   setJourneys(data.journeys);
+    //   setTotalJourneys(data.total)
+    // });
+    getAllJourneys(paginationModel.pageSize, paginationModel.page).then(
+      (data: any) => {
+        setJourneys(data.data);
+        setTotalJourneys(data.total);
+        setTotalPages(data.totalPages);
+      }
+    );
   }, []);
 
-  const handleGetNextData = (pageNum: number) => {
-    getSucceedingJourneys(pageNum).then((data: any) => {
-      setJourneys(data);
-    });
+  const handleGetNextData = (newPaginationModel: any) => {
+    getAllJourneys(newPaginationModel.pageSize, newPaginationModel.page).then(
+      (data: any) => {
+        setJourneys(data.data);
+        setTotalJourneys(data.total);
+        setTotalPages(data.totalPages);
+      }
+    );
   };
 
   return (
@@ -40,7 +60,19 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/stations" element={<Stations stations={stations} />} />
-          <Route path="/journeys" element={<Journeys journeys={journeys} handleGetNextData={handleGetNextData} />} />
+          <Route
+            path="/journeys"
+            element={
+              <Journeys
+                journeys={journeys}
+                handleGetNextData={handleGetNextData}
+                totalJourneys={totalJourneys}
+                setPaginationModel={setPaginationModel}
+                paginationModel={paginationModel}
+                totalPages={totalPages}
+              />
+            }
+          />
           <Route
             path="/addJourney"
             element={<AddJourney stations={stations} />}

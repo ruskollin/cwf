@@ -1,40 +1,39 @@
 import { useState, useEffect, useCallback } from "react";
 import { Journey } from "../types";
 import Box from "@mui/material/Box";
-import { DataGrid, GridColDef, GridPagination } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridPagination  } from "@mui/x-data-grid";
 import Search from "./Search";
+
+interface PaginationModel {
+  pageSize: number;
+  page: number;
+}
 
 interface Props {
   journeys: Journey[];
-  handleGetNextData: (pageNumber: number) => void;
+  handleGetNextData: (newPaginationModel: PaginationModel) => void;
+  totalJourneys: number;
+  setPaginationModel: (newPaginationModel: PaginationModel) => void;
+  paginationModel: PaginationModel;
+  totalPages: number;
 }
 
-const Journeys = ({ journeys, handleGetNextData }: Props) => {
+const Journeys = ({ journeys, handleGetNextData, totalJourneys, setPaginationModel, paginationModel, totalPages }: Props) => {
   const [filterWord, setFilterWord] = useState("");
-  const [paginationModel, setPaginationModel] = useState({
-    pageSize: 100,
-    page: 0,
-  });
-
-  const [fromNum, setFromNum] = useState(0);
+  const [fromNum, setFromNum] = useState(1);
   const [toNum, setToNum] = useState(100);
 
-  function changeDataTable() {
-    setFromNum(fromNum + 100)
-    setToNum(toNum + 100) 
-    setPaginationModel((prevPaginationModel) => ({
-      ...prevPaginationModel,
-      page: prevPaginationModel.page + 1,
-    }));
-  }
+  // useEffect(() => {
+  //   console.log(fromNum, toNum, paginationModel)
+  // }, [fromNum, toNum, paginationModel]);
 
-  useEffect(() => {
-    console.log(fromNum, toNum, paginationModel)
-  }, [fromNum, toNum, paginationModel]);
+  // useEffect(() => {
+  //   console.log('journeys: ', journeys)
+  // }, [journeys]);
 
   const CustomPagination = (props: any) => {
     const formatDisplayedRows = () => {
-      return `${fromNum}-${toNum} of 770,148+`;
+      return `${fromNum}-${toNum} of ${totalJourneys}`;
     };
     return (
       <GridPagination
@@ -43,8 +42,6 @@ const Journeys = ({ journeys, handleGetNextData }: Props) => {
       />
     );
   };
-
-
 
   const columns: GridColDef[] = [
     {
@@ -79,9 +76,14 @@ const Journeys = ({ journeys, handleGetNextData }: Props) => {
     Duration: x.Duration,
   }));
 
-  const handlePaginationChange = (newPaginationModel: any) => {
-    console.log(newPaginationModel);
+  const handlePaginationChange = (newPaginationModel: PaginationModel ) => {
     setPaginationModel(newPaginationModel);
+    handleGetNextData(newPaginationModel);
+    const startRow =  newPaginationModel.page * newPaginationModel.pageSize;
+    const endRow = newPaginationModel.page === 0 ? newPaginationModel.pageSize : newPaginationModel.page * newPaginationModel.pageSize + newPaginationModel.pageSize;
+    setFromNum(startRow)
+    setToNum(endRow)
+
   };
 
   return (
@@ -113,7 +115,8 @@ const Journeys = ({ journeys, handleGetNextData }: Props) => {
           })}
           columns={columns}
           paginationModel={paginationModel}
-          rowCount={journeys.length}
+          rowCount={totalPages}
+          paginationMode="server"
           onPaginationModelChange={handlePaginationChange}
           components={{
             Pagination: CustomPagination,
@@ -124,9 +127,6 @@ const Journeys = ({ journeys, handleGetNextData }: Props) => {
         <button onClick={handleGetNextData}>Next</button> } */}
 
         {/* <button onClick={() => handleGetNextData(paginationModel.page)}> */}
-        <button onClick={() => changeDataTable()}> 
-          Next
-        </button>
       </Box>
     </Box>
   );
