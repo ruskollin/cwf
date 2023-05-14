@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Lottie from "lottie-react";
-import BikeAnimation from "../img/bike.json";
+import BikeAnimation from "../lotties/bike.json";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 

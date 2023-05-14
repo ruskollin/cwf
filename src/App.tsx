@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { getAllStations } from "./services/stationService";
-import {
-  getAllJourneys
-} from "./services/journeyService";
+import { getAllJourneys } from "./services/journeyService";
 import { Station, Journey } from "./types";
 import Stations from "./components/Stations";
 import Journeys from "./components/Journeys";
@@ -30,10 +28,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // getAllJourneys().then((data: any) => {
-    //   setJourneys(data.journeys);
-    //   setTotalJourneys(data.total)
-    // });
     getAllJourneys(paginationModel.pageSize, paginationModel.page).then(
       (data: any) => {
         setJourneys(data.data);

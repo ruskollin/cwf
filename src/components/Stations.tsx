@@ -343,48 +343,6 @@ const Stations = ({ stations }: Props) => {
                   </td>
                 </tr>
               </table>
-
-              {/* <div>
-                <p>Departures: {departures}</p>
-
-                <p>Average Distance: </p>
-                <Box className="geometricalDiv">
-                  {averageDistanceStartingAtStation
-                    ? averageDistanceStartingAtStation.toFixed(2)
-                    : "0"}
-                  kms.
-                </Box>
-                {popularReturnStations.length > 0 && (
-                  <div>
-                    <p>Most go to:</p>
-                    {popularReturnStations
-                      .map(
-                        (station: { returnStation: string }) =>
-                          station.returnStation
-                      )
-                      .join(", ")}
-                  </div>
-                )}
-                <p>Returns: {returns}</p>
-                <p>
-                  Average Distance:{" "}
-                  {averageDistanceEndingAtStation
-                    ? averageDistanceEndingAtStation.toFixed(2)
-                    : "0"}
-                  kms.
-                </p>
-                {popularDepartureStations.length > 0 && (
-                  <div>
-                    <p>Most come from:</p>
-                    {popularDepartureStations
-                      .map(
-                        (station: { departureStation: string }) =>
-                          station.departureStation
-                      )
-                      .join(", ")}
-                  </div>
-                )}
-              </div> */}
             </div>
           )}
         </div>

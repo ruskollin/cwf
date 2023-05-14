@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Journey } from "../types";
 import Box from "@mui/material/Box";
-import { DataGrid, GridColDef, GridPagination  } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridPagination } from "@mui/x-data-grid";
 import Search from "./Search";
 
 interface PaginationModel {
@@ -18,28 +18,24 @@ interface Props {
   totalPages: number;
 }
 
-const Journeys = ({ journeys, handleGetNextData, totalJourneys, setPaginationModel, paginationModel, totalPages }: Props) => {
+const Journeys = ({
+  journeys,
+  handleGetNextData,
+  totalJourneys,
+  setPaginationModel,
+  paginationModel,
+  totalPages,
+}: Props) => {
   const [filterWord, setFilterWord] = useState("");
   const [fromNum, setFromNum] = useState(1);
   const [toNum, setToNum] = useState(100);
-
-  // useEffect(() => {
-  //   console.log(fromNum, toNum, paginationModel)
-  // }, [fromNum, toNum, paginationModel]);
-
-  // useEffect(() => {
-  //   console.log('journeys: ', journeys)
-  // }, [journeys]);
 
   const CustomPagination = (props: any) => {
     const formatDisplayedRows = () => {
       return `${fromNum}-${toNum} of ${totalJourneys}`;
     };
     return (
-      <GridPagination
-        {...props}
-        labelDisplayedRows={formatDisplayedRows}
-      />
+      <GridPagination {...props} labelDisplayedRows={formatDisplayedRows} />
     );
   };
 
@@ -76,14 +72,17 @@ const Journeys = ({ journeys, handleGetNextData, totalJourneys, setPaginationMod
     Duration: x.Duration,
   }));
 
-  const handlePaginationChange = (newPaginationModel: PaginationModel ) => {
+  const handlePaginationChange = (newPaginationModel: PaginationModel) => {
     setPaginationModel(newPaginationModel);
     handleGetNextData(newPaginationModel);
-    const startRow =  newPaginationModel.page * newPaginationModel.pageSize;
-    const endRow = newPaginationModel.page === 0 ? newPaginationModel.pageSize : newPaginationModel.page * newPaginationModel.pageSize + newPaginationModel.pageSize;
-    setFromNum(startRow)
-    setToNum(endRow)
-
+    const startRow = newPaginationModel.page * newPaginationModel.pageSize;
+    const endRow =
+      newPaginationModel.page === 0
+        ? newPaginationModel.pageSize
+        : newPaginationModel.page * newPaginationModel.pageSize +
+          newPaginationModel.pageSize;
+    setFromNum(startRow);
+    setToNum(endRow);
   };
 
   return (
@@ -122,11 +121,6 @@ const Journeys = ({ journeys, handleGetNextData, totalJourneys, setPaginationMod
             Pagination: CustomPagination,
           }}
         />
-
-        {/* {paginationModel.page === 99 &&
-        <button onClick={handleGetNextData}>Next</button> } */}
-
-        {/* <button onClick={() => handleGetNextData(paginationModel.page)}> */}
       </Box>
     </Box>
   );
