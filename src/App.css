@@ -197,11 +197,37 @@ button.focus{
   cursor: pointer;
 }
 
+.banner {
+  background-image: url('./lotties/bikePic.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center 30%;
+  height: 400px;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.banner-content {
+  text-align: center;
+  color: black;
+  padding: 20px;
+  background-color: rgb(229 229 229 / 70%);
+}
+
+.banner-content h1 {
+  font-size: 36px;
+  margin-bottom: 16px;
+}
+
 @keyframes move {
   0% {
     left: 0;
   }
   100% {
-    left: calc(100vw + 50px);
+    left: calc(100vw + 200px);
   }
 }

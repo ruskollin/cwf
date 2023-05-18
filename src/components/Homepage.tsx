@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Banner from "./Banner";
 import Lottie from "lottie-react";
 import BikeAnimation from "../lotties/bike.json";
 import Box from "@mui/material/Box";
@@ -18,6 +19,7 @@ const HomePage = () => {
   };
 
   return (
+    <Box>
     <Box
       sx={{ width: "100%", marginBottom: "-94px" }}
       className="moveAnimation"
@@ -29,6 +31,9 @@ const HomePage = () => {
           style={{ width: 200 }}
         />
       </Button>
+    
+    </Box>  
+    <Banner />
     </Box>
   );
 };
