@@ -9,7 +9,7 @@ For your adventure to start,
 1. Clone this repository by running `git clone https://github.com/ruskollin/cwf.git`.
 2. Go to folder pdf by running `cd cwf`.
 3. Install the necessary dependencies by running `npm install`.
-4. Run the program by running `npm start`.
+4. Run the program by running `npm start`. Might take some time. 
 
 ## Features :mountain_bicyclist:
 
