@@ -1,6 +1,8 @@
+const link = "http://localhost:3000"
+
 describe("Testing the menu and navigation", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:3000")
+    cy.visit(link)
   })
 
   it("can open the front page", () =>
@@ -32,7 +34,7 @@ describe("Testing the menu and navigation", () => {
 
 describe("Testing STATION page", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:3000")
+    cy.visit(link)
       .get(".bm-burger-button")
       .click()
       .get(".menu-item")
@@ -73,7 +75,7 @@ describe("Testing STATION page", () => {
 
 describe("Testing JOURNEYS page", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:3000")
+    cy.visit(link)
       .get(".bm-burger-button")
       .click()
       .get(".menu-item")
@@ -92,7 +94,7 @@ describe("Testing JOURNEYS page", () => {
 
 describe("Testing ADD STATION page", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:3000")
+    cy.visit(link)
       .get(".bm-burger-button")
       .click()
       .get(".menu-item")
@@ -143,7 +145,7 @@ it("should add a new station when the ADD button is clicked", () => {
 
 describe("Testing ADD JOURNEY page", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:3000")
+    cy.visit(link)
       .get(".bm-burger-button")
       .click()
       .get(".menu-item")

@@ -18,7 +18,9 @@ interface Props {
 }
 
 const Map = ({ selectedStation }: Props) => {
-  const apiKey: any = process.env.api_key;
+  //INSERT API_KEY HERE
+  // const apiKey: any = process.env.api_key;
+  const apiKey: string = "";
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: apiKey,
   });
