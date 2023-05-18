@@ -6,7 +6,7 @@ Welcome to my TypeScript Project's Frontend! This TypeScript-based app brings th
 
 For your adventure to start,
 
-1. Clone this repository by running `https://github.com/ruskollin/cwf.git`.
+1. Clone this repository by running `git clone https://github.com/ruskollin/cwf.git`.
 2. Go to folder pdf by running `cd cwf`.
 3. Install the necessary dependencies by running `npm install`.
 4. Run the program by running `npm start`.
